@@ -23,6 +23,12 @@ public:
     {
         return rules;
     }
+
+    void showRules()
+    {
+        for (int i = 0;i < rules.size();i++)
+            cout << rules[i];
+    }
 };
 
 #endif // GRAMMAR_H
