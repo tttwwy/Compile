@@ -3,6 +3,9 @@
 #include "rule.h"
 #include "grammar.h"
 #include <iostream>
+#include "item.h"
+#include <set>
+#include <queue>
 using namespace std;
 class Generator
 {
@@ -21,7 +24,7 @@ class Generator
     };
 
     vector<IRule> rules;
-    ElementSet elems;
+    ElementSet elements;
     int beginTokenId;
     int beginRuleId;
     int eofTokenId;
@@ -37,7 +40,7 @@ class Generator
     void clear()
     {
         rules.clear();
-        elems.clear();
+        elements.clear();
         inited = false;
         beginTokenId = -1;
         beginRuleId = -1;
@@ -45,8 +48,8 @@ class Generator
 
     int findToken(Element e)
     {
-        for (int i = 0;i < elems.size();i++)
-            if (elems[i] == e)
+        for (int i = 0;i < elements.size();i++)
+            if (elements[i] == e)
                 return i;
         return -1;
     }
@@ -63,7 +66,7 @@ class Generator
     {
         if (findToken(rule.getLeft()) < 0)
         {
-            elems.push_back(rule.getLeft());
+            elements.push_back(rule.getLeft());
         }
 
         int left = findToken(rule.getLeft());
@@ -73,7 +76,7 @@ class Generator
         {
             if (findToken(temp[i]) < 0)
             {
-                elems.push_back(temp[i]);
+                elements.push_back(temp[i]);
             }
             right.push_back(findToken(temp[i]));
         }
@@ -87,10 +90,10 @@ class Generator
     bool init(Grammar &grammar)
     {
         clear();
-        const Element e = grammar.getStart();
-        if (!e.isValid())
+        const Element startElement = grammar.getStart();
+        if (!startElement.isValid())
             return false;
-        elems.push_back(Element::eof());
+        elements.push_back(Element::eof());
         eofTokenId = findToken(Element::eof());
         Element beginToken(Element::non_terminator,"S\'");
 
@@ -99,10 +102,10 @@ class Generator
             addRule(temp1[i]);
 
         //À©Õ¹ÎÄ·¨
-        ElementSet begin;
-        begin.push_back(e);
-        Rule beginRule(beginToken,begin);
-        int bid = addRule(beginRule);
+        ElementSet startSet;
+        startSet.push_back(startElement);
+        Rule startRule(beginToken,startSet);
+        int bid = addRule(startRule);
         if (bid >= 0)
             beginRuleId = bid;
         else
@@ -115,6 +118,13 @@ class Generator
         inited = true;
         return true;
     }
+
+    void closure(set<Item> &itemSet)
+    {
+        queue<Item> q;
+        for
+    }
+
 };
 
 #endif // GENERATOR_H

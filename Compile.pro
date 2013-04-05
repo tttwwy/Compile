@@ -15,5 +15,7 @@ HEADERS += \
     define.h \
     grammar.h \
     generator.h \
-    elementset.h
+    elementset.h \
+    item.h \
+    ItemSet.h
 
