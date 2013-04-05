@@ -46,33 +46,33 @@ int main()
     Element  COMMA(Element::terminator, "\",\"");
 
 
-    grammar.add(Rule(e_prog, e_expr));
+    grammar.add(Rule(e_prog, e_expr+e_expr));
     grammar.add(Rule(e_expr, e_expr_assign));
-    grammar.add(Rule(e_expr_assign, e_expr_var + ASSIGN + e_expr_assign));
-    grammar.add(Rule(e_expr_assign, e_expr_add));
-    grammar.add(Rule(e_expr_add, e_expr_add + ADD + e_expr_mul));
-    grammar.add(Rule(e_expr_add, e_expr_add + SUB + e_expr_mul));
-    grammar.add(Rule(e_expr_add, e_expr_mul));
-    grammar.add(Rule(e_expr_mul, e_expr_mul + MUL + e_expr_pow));
-    grammar.add(Rule(e_expr_mul, e_expr_mul + DIV + e_expr_pow));
-    grammar.add(Rule(e_expr_mul, e_expr_mul + MOD + e_expr_pow));
-    grammar.add(Rule(e_expr_mul, e_expr_mul + IDIV + e_expr_pow));
-    grammar.add(Rule(e_expr_mul, e_expr_pow));
-    grammar.add(Rule(e_expr_pow, e_expr_unary + POW + e_expr_pow));
-    grammar.add(Rule(e_expr_pow, e_expr_unary));
-    grammar.add(Rule(e_expr_unary, LB + e_expr + RB));
-    grammar.add(Rule(e_expr_unary, ADD + e_expr_unary));
-    grammar.add(Rule(e_expr_unary, SUB + e_expr_unary));
-    grammar.add(Rule(e_expr_unary, NUM));
-    grammar.add(Rule(e_expr_unary, e_expr_var));
-    grammar.add(Rule(e_expr_unary, e_expr_func_call));
-    grammar.add(Rule(e_expr_var, ID));
-    grammar.add(Rule(e_expr_var, e_expr_var + LSB + e_expr + RSB));
-    grammar.add(Rule(e_expr_func_call, e_expr_var + LB + e_param_list + RB));
-    grammar.add(Rule(e_param_list));
-    grammar.add(Rule(e_param_list, e_expr));
-    grammar.add(Rule(e_param_list, e_param_list + COMMA + e_expr));
-    grammar.setStart(e_prog);
+//    grammar.add(Rule(e_expr_assign, e_expr_var + ASSIGN + e_expr_assign));
+//    grammar.add(Rule(e_expr_assign, e_expr_add));
+//    grammar.add(Rule(e_expr_add, e_expr_add + ADD + e_expr_mul));
+//    grammar.add(Rule(e_expr_add, e_expr_add + SUB + e_expr_mul));
+//    grammar.add(Rule(e_expr_add, e_expr_mul));
+//    grammar.add(Rule(e_expr_mul, e_expr_mul + MUL + e_expr_pow));
+//    grammar.add(Rule(e_expr_mul, e_expr_mul + DIV + e_expr_pow));
+//    grammar.add(Rule(e_expr_mul, e_expr_mul + MOD + e_expr_pow));
+//    grammar.add(Rule(e_expr_mul, e_expr_mul + IDIV + e_expr_pow));
+//    grammar.add(Rule(e_expr_mul, e_expr_pow));
+//    grammar.add(Rule(e_expr_pow, e_expr_unary + POW + e_expr_pow));
+//    grammar.add(Rule(e_expr_pow, e_expr_unary));
+//    grammar.add(Rule(e_expr_unary, LB + e_expr + RB));
+//    grammar.add(Rule(e_expr_unary, ADD + e_expr_unary));
+//    grammar.add(Rule(e_expr_unary, SUB + e_expr_unary));
+//    grammar.add(Rule(e_expr_unary, NUM));
+//    grammar.add(Rule(e_expr_unary, e_expr_var));
+//    grammar.add(Rule(e_expr_unary, e_expr_func_call));
+//    grammar.add(Rule(e_expr_var, ID));
+//    grammar.add(Rule(e_expr_var, e_expr_var + LSB + e_expr + RSB));
+//    grammar.add(Rule(e_expr_func_call, e_expr_var + LB + e_param_list + RB));
+//    grammar.add(Rule(e_param_list));
+//    grammar.add(Rule(e_param_list, e_expr));
+//    grammar.add(Rule(e_param_list, e_param_list + COMMA + e_expr));
+//    grammar.setStart(e_prog);
 
 
 }

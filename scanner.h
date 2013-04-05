@@ -11,7 +11,7 @@ typedef enum
     LE,GE,EQ,NEQ,LCOMMENT,RCOMMENT,LT,GT,ASSIGN,
     PLUS,MINUS,MULTI,RDIV,SEMI,COMMA,LPAREN,RPAREN,LMBRACKET,RMBRACKET,LBBRACKET,RBBRACKET,
     NUM,ID,STR,ERROR
-} Type;
+} Types;
 
 typedef enum
 {
@@ -20,7 +20,7 @@ typedef enum
 
 struct token
 {
-    Type type;
+    Types type;
     string value;
     int linenode;
 };
@@ -35,7 +35,7 @@ public:
     char getNext();
     void getBack();
     DFAState getstate(char c);
-    Type getType(string str);
+    Types getType(string str);
     bool scan();
     string code;
     vector<token> tokens;

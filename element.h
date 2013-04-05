@@ -1,6 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 #include "define.h"
+class ElementSet;
 class Element
 {
 public:
@@ -13,8 +14,6 @@ public:
     string name;
     static Element  eof_;   /*** ½áÎ²·ûºÅ */
     static Element  null;  /*** ¿Õ·ûºÅ */
-
-
 
     Element(Type type,string name)
     {
@@ -35,10 +34,22 @@ public:
         return eof_;
     }
 
-    bool operator == (const Element& right) const {
+    bool equal (const Element& right) const {
         return this->type == right.type
                 && this->name == right.name;
     }
+
+    bool operator == (const Element& right) const {
+        return  equal(right);
+    }
+    bool operator != (const Element& right) const {
+        return  !equal(right);
+    }
+
+public:
+    ElementSet operator + (const Element  & left);
+
+
 };
 
-#endif // ELEMENT_H
+#endif

@@ -14,5 +14,6 @@ HEADERS += \
     rule.h \
     define.h \
     grammar.h \
-    generator.h
+    generator.h \
+    elementset.h
 

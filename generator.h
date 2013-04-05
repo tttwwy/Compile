@@ -21,7 +21,7 @@ class Generator
     };
 
     vector<IRule> rules;
-    vector<Element> elems;
+    ElementSet elems;
     int beginTokenId;
     int beginRuleId;
     int eofTokenId;
@@ -68,7 +68,7 @@ class Generator
 
         int left = findToken(rule.getLeft());
         vector<int> right;
-        vector<Element> temp = rule.getRight();
+        ElementSet temp = rule.getRight();
         for (int i = 0;i < temp.size();i++)
         {
             if (findToken(temp[i]) < 0)
@@ -99,7 +99,7 @@ class Generator
             addRule(temp1[i]);
 
         //À©Õ¹ÎÄ·¨
-        vector<Element> begin;
+        ElementSet begin;
         begin.push_back(e);
         Rule beginRule(beginToken,begin);
         int bid = addRule(beginRule);

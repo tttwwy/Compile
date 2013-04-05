@@ -1,18 +1,19 @@
 #ifndef RULE_H
 #define RULE_H
 #include "element.h"
-#include <vector>
+#include "elementset.h"
+
 class Rule
 {
 public:
     Element left;
-    vector<Element> right;
+    ElementSet right;
     Rule()
     {
 
     }
 
-    Rule(Element left_,vector<Element> right_)
+    Rule(Element left_,ElementSet right_)
     {
         left = left_;
         right = right_;
@@ -22,7 +23,7 @@ public:
     {
         return left;
     }
-    vector<Element> getRight()
+    ElementSet getRight()
     {
         return right;
     }
