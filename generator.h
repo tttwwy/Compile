@@ -4,8 +4,9 @@
 #include "grammar.h"
 #include <iostream>
 #include "item.h"
-#include <set>
+#include "itemset.h"
 #include <queue>
+
 using namespace std;
 class Generator
 {
@@ -35,6 +36,39 @@ class Generator
         beginTokenId = -1;
         beginRuleId = -1;
         inited = false;
+    }
+
+    IRule getIRule(int pos)
+    {
+        if (pos >= 0 && pos < rules.size())
+            return rules[pos];
+        else
+        {
+            cout << "getIRule error!";
+        }
+    }
+
+    int getElementId(Item item,int x)
+    {
+        if (item.getRule() >= 0 && item.getRule() < rules.size())
+        return getIRule(item.getRule()).getRight(x);
+        else
+            cout << "getElementId error!";
+    }
+
+    IRule getIRule(Item item)
+    {
+        return rules[item.getRule()];
+    }
+
+    int rulesSize()
+    {
+        return rules.size();
+    }
+
+    int elementsSize()
+    {
+        return elements.size();
     }
 
     void clear()
@@ -119,10 +153,52 @@ class Generator
         return true;
     }
 
-    void closure(set<Item> &itemSet)
+    void closure(ItemSet C)
     {
+        //待检测项目
         queue<Item> q;
-        for
+        //初始项目
+        for (int i = 0;i < C.size();i++)
+        {
+            q.push(C[i]);
+        }
+        while(!q.empty())
+        {
+            Item item = q.front();
+            q.pop();
+            if (item.getPos() < getIRule(item.getRule()).size())
+            {
+                int elementID  = getIRule(item).getRight(item.getPos());
+                for (int i = 0;i < rulesSize();i++)
+                {
+                    if (getIRule(i).getLeft() == elementID)
+                    {
+                        Item temp(i,0,Item::invalid_forward);
+                        if (C.push_back(temp))
+                        {
+                            q.push(temp);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    ItemSet go(ItemSet &from,int x)
+    {
+        ItemSet to;
+        for (int i = 0;i < from.size();i++)
+        {
+            if (getElementId(from[i],from[i].getPos()) == x
+                    && from[i].getPos() < getIRule(from[i].getRule()).size())
+            {
+                Item item = from[i];
+                item.pos++;
+                to.push_back(item);
+            }
+        }
+        return to;
     }
 
 };

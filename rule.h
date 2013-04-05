@@ -42,6 +42,10 @@ public:
         os << endl;
         return os;
     }
+    int size()
+    {
+        return right.size();
+    }
 
 
 };
@@ -51,6 +55,11 @@ class IRule
 public:
     int left;
     vector<int> right;
+    IRule()
+    {
+
+    }
+
     IRule(int left_,vector<int> right_)
     {
         left = left_;
@@ -60,6 +69,16 @@ public:
         return this->left == rule.left && this->right == rule.right;
     }
 
+    int getRight(int pos)
+    {
+        return right[pos];
+    }
+
+    int getLeft()
+    {
+        return left;
+    }
+
 
     /** 判断两个规则是否相等 */
     bool operator == (const IRule&  rule) const {
@@ -67,6 +86,10 @@ public:
     }
     bool operator != (const IRule&  right) const {
         return !equal(right);
+    }
+    int size()
+    {
+        return right.size();
     }
 
 };

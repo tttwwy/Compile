@@ -17,5 +17,5 @@ HEADERS += \
     generator.h \
     elementset.h \
     item.h \
-    ItemSet.h
+    itemset.h
 

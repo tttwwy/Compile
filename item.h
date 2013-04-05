@@ -63,14 +63,14 @@ public:
     bool operator != (const Item& other) const {
         return !equal(other);
     }
-    Item& operator = (const Item& other) {
-        if(this != &other) {
-            this->rule = other.rule;
-            this->pos = other.pos;
-            this->forward = other.forward;
-        }
-        return *this;
-    }
+//    Item& operator = (const Item& other) {
+//        if(this != &other) {
+//            this->rule = other.rule;
+//            this->pos = other.pos;
+//            this->forward = other.forward;
+//        }
+//        return *this;
+//    }
 
 
 };
