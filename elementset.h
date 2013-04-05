@@ -78,7 +78,10 @@ public:
 };
 
 ElementSet Element::operator + (const Element & left) {
-    return ElementSet(const this, left);
+    Element a;
+    a.name = this->name;
+    a.type = this->type;
+    return ElementSet(a, left);
 }
 
 #endif // ELEMENTSET_H
