@@ -12,11 +12,11 @@ public:
     int rule;
     int pos;
     int forward;
-    static Item nullItem;
-    static const Item& nullItem()
-    {
-        return nullItem;
-    }
+//    static Item nullItem;
+//    static const Item& nullItem()
+//    {
+//        return nullItem;
+//    }
     Item()
     {
         rule = invalid_ruleId;
@@ -30,6 +30,12 @@ public:
         this->forward = forward;
     }
 
+    bool isValid()
+    {
+        return! (forward == invalid_forward || pos == invalid_pos
+                || rule == invalid_ruleId);
+    }
+
     Item(const Item& other)
     {
         rule = other.rule;
@@ -37,15 +43,15 @@ public:
         forward = other.forward;
     }
 
-    int getRule()
+    int getRule() const
     {
         return rule;
     }
-    int getPos()
+    int getPos() const
     {
         return pos;
     }
-    int getForward()
+    int getForward() const
     {
         return forward;
     }
@@ -61,14 +67,14 @@ public:
 
     bool operator <(const Item& other) const
     {
-        if (other.get_rule() != this->get_rule())
-            return other.get_rule() < this->get_rule();
+        if (other.getRule() != this->getRule())
+            return other.getRule() < this->getRule();
 
-        if (other.get_pos()!= this->get_pos())
-            return other.get_pos() < this->get_pos();
+        if (other.getPos()!= this->getPos())
+            return other.getPos() < this->getPos();
 
-        if (other.get_forward()!= this->get_forward())
-            return other.get_forward() < this->get_forward();
+        if (other.getForward()!= this->getForward())
+            return other.getForward() < this->getForward();
     }
 
 

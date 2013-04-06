@@ -35,13 +35,14 @@ class Generator
 
     };
 
+public:
     vector<IRule> rules;
     ElementSet elements;
     int beginTokenId;
     int beginRuleId;
     int eofTokenId;
     bool inited;
-    ItemSetEx set;
+    ItemSetEx itemSetEx;
     Generator()
     {
         beginTokenId = -1;
@@ -137,15 +138,16 @@ class Generator
         IRule temp2(left,right);
         if (findIRule(temp2) < 0)
             rules.push_back(temp2);
-        return findIrule(temp2);
+        return findIRule(temp2);
     }
 
     bool init(Grammar &grammar)
     {
         clear();
-        const Element startElement = grammar.getStart();
+        Element startElement = grammar.getStart().left;
         if (!startElement.isValid())
             return false;
+
         elements.push_back(Element::eof());
         eofTokenId = findToken(Element::eof());
         Element beginToken(Element::non_terminator,"S\'");
@@ -223,13 +225,13 @@ class Generator
                         canNull = true;
                     else
                     {
-                        first(rule.getRight(),firstSet,canNull);
-                        //                        bool bn = true;
-                        //                        for (int k = 0;bn && k < rule.right.size();k++ )
-                        //                        {
-                        //                            first(rule.getRight(k),firstSet,bn);
-                        //                        }
-                        //                        canNull = true;
+                        //                        first(rule.getRight(),firstSet,canNull);
+                        bool bn = true;
+                        for (int k = 0;bn && k < rule.right.size();k++ )
+                        {
+                            first(rule.getRight(k),firstSet,bn);
+                        }
+                        canNull = true;
                     }
                 }
             }
@@ -336,26 +338,27 @@ class Generator
 
     void genItemSex()
     {
-        set.clear();
+        itemSetEx.clear();
 
         ItemSet first(Item(beginRuleId,0,eofTokenId));
         lr1Closure(first);
 
-        set.push_back(first);
+        itemSetEx.push_back(first);
 
-        bool go = true;
-        while(go)
+        bool run = true;
+        while(run)
         {
-            go = false;
-            for (int i = 0;i < set.size();i++)
+            run = false;
+            for (int i = 0;i < itemSetEx.size();i++)
             {
                 for (int j = 0;j < elements.size();j++)
                 {
-                    ItemSet temp = go(set[i],j);
-                    if (temp.size() > 0 && !set.isExisted(temp))
+                    ItemSet temp = go(itemSetEx[i],j);
+                    if (temp.size() > 0 && !itemSetEx.isExisted(temp))
                     {
-                        set.push_back(temp);
-                        go = true;
+                        itemSetEx.push_back(temp);
+                        temp.setGotoTable(j,itemSetEx.size()-1);
+                        run = true;
                     }
 
                 }
@@ -365,13 +368,135 @@ class Generator
 
     void genTable()
     {
-        vector <vector <Action> >action(set.size(),vector <int> (elements.size()));
-        vector <vector <Action> >goTo(set.size(),vector <int> (elements.size()));
 
-        for (int i = 0;i < set.size();i++)
+        //非终结符号表
+        vector<int> nonTerm;
+        map<int,int> nonTermMap;
+
+        //终结符号表
+        vector<int> term;
+        map<int,int> termMap;
+
+        //        //规则表
+        //        vector<int> rule;
+        //        map<int,int> ruleMap;
+        //        termMap[eofTokenId] = 0;
+        //        term.push_back(eofTokenId);
+
+
+        //        for (int i = 0;i < set.size();i++)
+        //        {
+        //            for (int j = 0;j < set[i].size();j++)
+        //            {
+        //                set[i].sets
+        //            }
+
+        //        }
+        for (int i = 0;i < elements.size();i++)
         {
+            if(elements[i].isNonTerminator())
+            {
+                nonTerm.push_back(i);
+                nonTermMap[i] = nonTerm.size()-1;
+            }
+            else if (elements[i].isTerminator())
+            {
+                term.push_back(i);
+                termMap[i] = term.size()-1;
+            }
+        }
+
+
+        vector <vector<Action> > action(itemSetEx.size(),vector<Action>(term.size()));
+        vector <vector<int> > goTo(itemSetEx.size(),vector<int>(nonTerm.size()));
+
+        int stateCount = itemSetEx.size();
+        int actionCount = term.size();
+        int goToCount = nonTerm.size();
+        int ruleCount = rules.size();
+        for (int i = 0;i < itemSetEx.size();i++)
+        {
+            ItemSet itemSet = itemSetEx[i];
+            Action temp;
+            for (int j = 0;j < itemSetEx[i].size();j++)
+            {
+                Item item = itemSetEx[i][j];
+
+                //是否为起始项目
+                if (item.getRule() == beginRuleId
+                        &&item.getPos() == 1
+                        &&item.isValid())
+                {
+
+                    temp.type = Action::accept;
+                    //                    temp.rule = item.getRule();
+                    action[i][termMap[item.forward]] = temp;
+                }
+                else if (item.getPos() < getIRule(item).right.size())
+                {
+                    int elementId = getIRule(item).getRight(item.getPos());
+                    Element element = getElement(elementId);
+                    if (element.isTerminator())
+                    {
+                        if (itemSet.go(elementId) >= 0)
+                        {
+                            temp = action[i][termMap[elementId]];
+                            if (temp.type == Action::error)
+                            {
+                                temp.type = Action::shift;
+                                temp.state = itemSet.go(elementId) ;
+                                action[i][termMap[elementId]] =temp;
+                            }
+                            else if (temp.type == Action::shift)
+                            {
+                                cout << "移进-规约冲突！" << endl;
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else
+                {
+                    temp = action[i][termMap[item.forward]];
+                    if (temp.type == Action::error)
+                    {
+                        temp.type = Action::reduce;
+                        temp.rule = item.getRule();
+                        action[i][termMap[item.forward]] = temp;
+                    }
+                    else if (temp.type == Action::reduce)
+                    {
+                        cout << "规约-规约冲突！"<< endl;
+                    }
+                    else
+                    {
+                        cout << "移进-规约冲突！" << endl;
+                    }
+                }
+            }
+            for (int k = 0;k < nonTerm.size();k++)
+            {
+                if (itemSet.go(nonTerm[k]) >= 0)
+                {
+                    goTo[i][k] = itemSet.go(nonTerm[k]);
+                }
+            }
 
         }
+    }
+    bool generator()
+    {
+        if (!inited)
+        {
+            cout << "没有初始化!";
+            return false;
+        }
+        genItemSex();
+        genTable();
+        return true;
     }
 };
 

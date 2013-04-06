@@ -3,6 +3,7 @@
 #include <string>
 #include "element.h"
 #include "grammar.h"
+#include "generator.h"
 #include "rule.h"
 using namespace std;
 
@@ -74,6 +75,17 @@ int main()
     grammar.add(Rule(e_param_list, e_param_list + COMMA + e_expr));
     grammar.setStart(e_prog);
     grammar.showRules();
+
+    Generator generator;
+    if(!generator.init(grammar)) {
+        cout << "error input grammar." << std::endl;
+        return 1;
+    }
+
+    if(!generator.generator()) {
+        std::cout << "error generator LALR table." << std::endl;
+        return 1;
+    }
 
 }
 

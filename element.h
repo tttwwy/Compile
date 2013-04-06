@@ -12,7 +12,6 @@ public:
     }Type;
     Type type;
     string name;
-    static Element  eof_;   /*** ½áÎ²·ûºÅ */
     static Element  null;  /*** ¿Õ·ûºÅ */
 
     Element(Type type,string name)
@@ -39,9 +38,9 @@ public:
         return type == terminator || type == non_terminator;
     }
 
-    static const Element &eof()
+     Element eof()
     {
-        return eof_;
+         return Element(terminator,"$");
     }
 
     bool equal (const Element& right) const {

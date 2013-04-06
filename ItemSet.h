@@ -4,6 +4,7 @@
 #include "item.h"
 #include <map>
 #include <algorithm>
+#include <iostream>
 using namespace std;
 
 
@@ -11,6 +12,26 @@ class ItemSet
 {
 public:
     vector<Item> items;
+    map<int,int> gotoTable;
+    ItemSet()
+    {
+
+    }
+
+    void setGotoTable(int X,int to)
+    {
+        gotoTable[X] = to;
+    }
+
+    int go(int x)
+    {
+        map<int,int>::iterator p = gotoTable.find(x);
+        if (p == gotoTable.end())
+            return -1;
+        else
+            return gotoTable[x];
+
+    }
 
     ItemSet(Item item)
     {
@@ -22,7 +43,7 @@ public:
         items.clear();
     }
 
-    int size()
+    int size() const
     {
         return items.size();
     }
@@ -83,10 +104,16 @@ public:
 class ItemSetEx{
 public:
     vector<ItemSet> sets;
+
     int id;
-    setId(int id)
+    void setId(int id)
     {
         this->id = id;
+    }
+
+    void setGotoTable(int from,int X,int to)
+    {
+
     }
 
     void clear()
@@ -110,7 +137,7 @@ public:
         return sets.size();
     }
 
-    int  push_back(ItemSet &set)
+    int push_back(ItemSet &set)
     {
         for (int i = 0;i < sets.size();i++)
         {
@@ -123,22 +150,18 @@ public:
 
     int push_back(Item &set)
     {
-       return push_back(ItemSet(set));
+        ItemSet temp(set);
+       return push_back(temp);
     }
 
-};
-
-class ItemSetCluster{
-public:
-    vector<ItemSetEx*> sets;
-
-    push_back(ItemSetEx & set)
-    {
-        for (int i = 0;i < sets.size();i++)
-        {
-
-        }
+    const ItemSet& operator [] (int pos) const {
+        return sets.at(pos);
+    }
+    ItemSet&  operator [] (int pos) {
+        return sets.at(pos);
     }
 };
+
+
 
 #endif // ITEMSET_H
