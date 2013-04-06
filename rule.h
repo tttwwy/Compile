@@ -74,6 +74,11 @@ public:
         return right[pos];
     }
 
+    vector<int> getRight()
+    {
+        return right;
+    }
+
     int getLeft()
     {
         return left;

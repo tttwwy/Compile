@@ -25,6 +25,16 @@ public:
 
     }
 
+    bool isTerminator()
+    {
+        return type == terminator;
+    }
+
+    bool isNonTerminator()
+    {
+        return type == non_terminator;
+    }
+
     bool isValid() {
         return type == terminator || type == non_terminator;
     }

@@ -6,12 +6,13 @@
 #include "item.h"
 #include "itemset.h"
 #include <queue>
-
+#include <set>
 using namespace std;
 class Generator
 {
-    struct Action
+    class Action
     {
+    public:
         enum Type {
             error  = 0,
             shift  = 1,
@@ -21,6 +22,16 @@ class Generator
         Type type;
         int rule;
         int state;
+        Action()
+        {
+            type = error;
+            rule = -1;
+        }
+        Action(Type type,int rule)
+        {
+            this->type = type;
+            this->rule = rule;
+        }
 
     };
 
@@ -30,7 +41,7 @@ class Generator
     int beginRuleId;
     int eofTokenId;
     bool inited;
-
+    ItemSetEx set;
     Generator()
     {
         beginTokenId = -1;
@@ -44,16 +55,24 @@ class Generator
             return rules[pos];
         else
         {
-            cout << "getIRule error!";
+            cout << "getIRule error!" << endl;
         }
     }
 
     int getElementId(Item item,int x)
     {
         if (item.getRule() >= 0 && item.getRule() < rules.size())
-        return getIRule(item.getRule()).getRight(x);
+            return getIRule(item.getRule()).getRight(x);
         else
-            cout << "getElementId error!";
+            cout << "getElementId error!" << endl;
+    }
+
+    Element getElement(int id)
+    {
+        if (id >= 0 && id < elements.size())
+            return elements[id];
+        else
+            cout << "getElement error!" << endl;
     }
 
     IRule getIRule(Item item)
@@ -185,6 +204,118 @@ class Generator
         }
     }
 
+    //单个元素的First集
+    void first(int id,set<int> &firstSet,bool &canNull )
+    {
+
+        if (id == Item::invalid_forward || getElement(id).isTerminator())
+        {
+            firstSet.insert(id);
+        }
+        else
+        {
+            for (int i = 0;i < rulesSize();i++)
+            {
+                IRule rule = rules[i];
+                if (rule.getLeft() == id)
+                {
+                    if (rule.right.size() == 0)
+                        canNull = true;
+                    else
+                    {
+                        first(rule.getRight(),firstSet,canNull);
+                        //                        bool bn = true;
+                        //                        for (int k = 0;bn && k < rule.right.size();k++ )
+                        //                        {
+                        //                            first(rule.getRight(k),firstSet,bn);
+                        //                        }
+                        //                        canNull = true;
+                    }
+                }
+            }
+        }
+    }
+
+    //串的First集
+    void first(vector<int> &idStr,set<int> &firstSet,bool &canNull)
+    {
+        bool bn = true;
+        for (int i = 0;bn && i < idStr.size();i++)
+        {
+            bn = false;
+            first(idStr[i],firstSet,bn);
+        }
+        canNull = bn;
+    }
+
+    void lr1Closure(ItemSet & C)
+    {
+        //待检测项目
+        queue<Item> q;
+        //初始项目
+        for (int i = 0;i < C.size();i++)
+        {
+            q.push(C[i]);
+        }
+        while(!q.empty())
+        {
+            Item item = q.front();
+            q.pop();
+            IRule rule =  getIRule(item.getRule());
+            if (item.getPos() < rule.size())
+            {
+                int elementID  = rule.getRight(item.getPos());
+                if (getElement(elementID).isNonTerminator())
+                {
+                    //计算First集
+                    vector<int> str;
+                    set<int> firstSet;
+                    for (int i = item.getPos()+1;i < rule.size();i++)
+                    {
+                        str.push_back(rule.getRight(i));
+                    }
+                    bool bn = false;
+                    first(str,firstSet,bn);
+
+
+                    for (int i = 0;i < rulesSize();i++)
+                    {
+                        if (getIRule(i).getLeft() == elementID)
+                        {
+                            for (set<int>::iterator p = firstSet.begin();p!=firstSet.end();p++)
+                            {
+                                Item temp(i,0,*p);
+                                if (C.push_back(temp))
+                                {
+                                    q.push(temp);
+                                }
+
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    void go(ItemSet &from,int x,ItemSet &to)
+    {
+        for (int i = 0;i < from.size();i++)
+        {
+            if (getElementId(from[i],from[i].getPos()) == x
+                    && from[i].getPos() < getIRule(from[i].getRule()).size())
+            {
+                Item item = from[i];
+                item.pos++;
+                to.push_back(item);
+            }
+        }
+
+    }
+
     ItemSet go(ItemSet &from,int x)
     {
         ItemSet to;
@@ -198,9 +329,52 @@ class Generator
                 to.push_back(item);
             }
         }
+
+        lr1Closure(to);
         return to;
     }
 
+    void genItemSex()
+    {
+        set.clear();
+
+        ItemSet first(Item(beginRuleId,0,eofTokenId));
+        lr1Closure(first);
+
+        set.push_back(first);
+
+        bool go = true;
+        while(go)
+        {
+            go = false;
+            for (int i = 0;i < set.size();i++)
+            {
+                for (int j = 0;j < elements.size();j++)
+                {
+                    ItemSet temp = go(set[i],j);
+                    if (temp.size() > 0 && !set.isExisted(temp))
+                    {
+                        set.push_back(temp);
+                        go = true;
+                    }
+
+                }
+            }
+        }
+    }
+
+    void genTable()
+    {
+        vector <vector <Action> >action(set.size(),vector <int> (elements.size()));
+        vector <vector <Action> >goTo(set.size(),vector <int> (elements.size()));
+
+        for (int i = 0;i < set.size();i++)
+        {
+
+        }
+    }
 };
+
+
 
 #endif // GENERATOR_H

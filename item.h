@@ -59,6 +59,19 @@ public:
         return equal(other);
     }
 
+    bool operator <(const Item& other) const
+    {
+        if (other.get_rule() != this->get_rule())
+            return other.get_rule() < this->get_rule();
+
+        if (other.get_pos()!= this->get_pos())
+            return other.get_pos() < this->get_pos();
+
+        if (other.get_forward()!= this->get_forward())
+            return other.get_forward() < this->get_forward();
+    }
+
+
     /** 两个项目是否不相等 */
     bool operator != (const Item& other) const {
         return !equal(other);
