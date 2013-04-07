@@ -4,9 +4,11 @@
 #include "grammar.h"
 #include <iostream>
 #include "item.h"
+#include <vector>
 #include "itemset.h"
 #include <queue>
 #include <set>
+#include <iomanip>
 using namespace std;
 class Generator
 {
@@ -148,8 +150,8 @@ public:
         if (!startElement.isValid())
             return false;
 
-        elements.push_back(Element::eof());
-        eofTokenId = findToken(Element::eof());
+        elements.push_back(startElement.eof());
+        eofTokenId = findToken(startElement.eof());
         Element beginToken(Element::non_terminator,"S\'");
 
         vector<Rule> temp1 = grammar.getRules();
@@ -171,8 +173,18 @@ public:
 
 
         inited = true;
+        //        cout << beginTokenId <<" " << beginRuleId << endl;
+        cout << "符号集："<< endl;
+        for (int i = 0;i < elements.size();i++)
+            cout << elements[i].type<<" "<<elements[i] << endl;
+
+        cout << "规则集:" << endl;
+        for (int i = 0;i < rules.size();i++)
+            showIRule(rules[i]);
         return true;
+
     }
+
 
     void closure(ItemSet C)
     {
@@ -248,6 +260,17 @@ public:
             first(idStr[i],firstSet,bn);
         }
         canNull = bn;
+        cout <<"求串的First集:" ;
+        for (int i = 0;i < idStr.size();i++)
+        {
+            elements[idStr[i]];
+        }
+        cout << endl;
+        for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
+        {
+            cout << elements[*p] <<" ";
+        }
+        cout << endl;
     }
 
     void lr1Closure(ItemSet & C)
@@ -276,6 +299,7 @@ public:
                     {
                         str.push_back(rule.getRight(i));
                     }
+                    str.push_back(item.forward);
                     bool bn = false;
                     first(str,firstSet,bn);
 
@@ -336,12 +360,59 @@ public:
         return to;
     }
 
+
+    void showIRule(IRule rule)
+    {
+        cout << elements[rule.getLeft()] << "->" ;
+        for (int i = 0;i < rule.getRight().size();i++)
+        {
+            cout << elements[rule.getRight(i)];
+        }
+        cout << endl;
+    }
+
+    void showItem(Item item)
+    {
+        IRule rule = getIRule(item);
+        cout << elements[rule.getLeft()] << "->";
+        for (int i = 0;i < rule.getRight().size();i++)
+        {
+            if (i == item.getPos())
+                cout << ".";
+            cout << elements[rule.getRight(i)];
+        }
+        cout<<"," <<elements[item.getForward()];
+        cout << endl;
+    }
+
+    void showItemSet(ItemSet itemSet)
+    {
+        for (int i = 0;i < itemSet.size();i++)
+            showItem(itemSet[i]);
+    }
+
+    void showItemSetEx()
+    {
+        for (int i = 0;i < itemSetEx.size();i++)
+        {
+            cout <<"项目集" << i << ":" << endl;
+            for (int j = 0;j < itemSetEx[i].size();j++)
+            {
+                showItem(itemSetEx[i][j]);
+            }
+        }
+    }
+
     void genItemSex()
     {
         itemSetEx.clear();
 
         ItemSet first(Item(beginRuleId,0,eofTokenId));
         lr1Closure(first);
+
+        showItemSet(first);
+
+
 
         itemSetEx.push_back(first);
 
@@ -354,16 +425,26 @@ public:
                 for (int j = 0;j < elements.size();j++)
                 {
                     ItemSet temp = go(itemSetEx[i],j);
-                    if (temp.size() > 0 && !itemSetEx.isExisted(temp))
+                    if (temp.size() > 0 )
                     {
-                        itemSetEx.push_back(temp);
-                        temp.setGotoTable(j,itemSetEx.size()-1);
-                        run = true;
+                        int k = itemSetEx.find(temp);
+                        if (k < 0)
+                        {
+                            //                        temp.setGotoTable(j,itemSetEx.size());
+                            itemSetEx.push_back(temp);
+                            itemSetEx[i].setGotoTable(j,itemSetEx.size()-1);
+                            run = true;
+                        }
+                        else
+                        {
+                            itemSetEx[i].setGotoTable(j,k);
+                        }
                     }
 
                 }
             }
         }
+        showItemSetEx();
     }
 
     void genTable()
@@ -409,6 +490,14 @@ public:
 
         vector <vector<Action> > action(itemSetEx.size(),vector<Action>(term.size()));
         vector <vector<int> > goTo(itemSetEx.size(),vector<int>(nonTerm.size()));
+        for (int i = 0;i < goTo.size();i++)
+        {
+            for (int j = 0;j < goTo[i].size();j++)
+            {
+                goTo[i][j] = -1;
+            }
+        }
+
 
         int stateCount = itemSetEx.size();
         int actionCount = term.size();
@@ -418,16 +507,21 @@ public:
         {
             ItemSet itemSet = itemSetEx[i];
             Action temp;
+            cout <<"项目" << i <<":\n";
             for (int j = 0;j < itemSetEx[i].size();j++)
             {
+
                 Item item = itemSetEx[i][j];
+                showItem(item);
+
 
                 //是否为起始项目
-                if (item.getRule() == beginRuleId
+                if (getIRule(item.getRule()).getLeft() == beginTokenId
                         &&item.getPos() == 1
                         &&item.isValid())
                 {
 
+                    cout <<"Accept\n";
                     temp.type = Action::accept;
                     //                    temp.rule = item.getRule();
                     action[i][termMap[item.forward]] = temp;
@@ -446,6 +540,7 @@ public:
                                 temp.type = Action::shift;
                                 temp.state = itemSet.go(elementId) ;
                                 action[i][termMap[elementId]] =temp;
+                                cout << "shift:" << temp.state << endl;
                             }
                             else if (temp.type == Action::shift)
                             {
@@ -466,6 +561,7 @@ public:
                         temp.type = Action::reduce;
                         temp.rule = item.getRule();
                         action[i][termMap[item.forward]] = temp;
+                        cout <<"reduce:" << temp.rule << endl;
                     }
                     else if (temp.type == Action::reduce)
                     {
@@ -484,8 +580,62 @@ public:
                     goTo[i][k] = itemSet.go(nonTerm[k]);
                 }
             }
-
         }
+        setiosflags(ios::left);
+
+        cout << "Action Table:" << endl;
+        cout  << " ";
+        for (int i = 0;i < term.size();i++)
+        {
+            cout << setw(3) << elements[term[i]];
+        }
+        cout << endl;
+        for (int i = 0;i < action.size();i++)
+        {
+            cout << setw(2) << i <<" ";
+            for (int j = 0;j < action[i].size();j++)
+            {
+
+                if (action[i][j].type == Action::shift)
+                {
+                    cout << "S" <<  action[i][j].state;
+                }
+                if (action[i][j].type == Action::reduce)
+                {
+                    cout << "r" << action[i][j].rule;
+                }
+                if (action[i][j].type == Action::accept)
+                {
+                    cout << "acc" ;
+                }
+                cout <<" ";
+            }
+            cout << endl;
+        }
+
+        cout << "Goto Table:" << endl;
+        cout  << " ";
+        for (int i = 0;i < nonTerm.size();i++)
+        {
+            cout << setw(3) << elements[nonTerm[i]];
+        }
+        cout << endl;
+        for (int i = 0;i < goTo.size();i++)
+        {
+            cout << setw(2) << i <<" ";
+            for (int j = 0;j < goTo[i].size();j++)
+            {
+
+                if (goTo[i][j] != -1)
+                {
+                    cout <<  goTo[i][j];
+                }
+
+                cout <<" ";
+            }
+            cout << endl;
+        }
+
     }
     bool generator()
     {

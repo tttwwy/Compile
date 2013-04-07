@@ -27,7 +27,7 @@ public:
     void showRules()
     {
         for (int i = 0;i < rules.size();i++)
-            cout << rules[i];
+            cout << rules[i] << endl;
     }
 };
 

@@ -38,9 +38,9 @@ public:
         return type == terminator || type == non_terminator;
     }
 
-     Element eof()
+    Element eof()
     {
-         return Element(terminator,"$");
+        return Element(terminator,"$");
     }
 
     bool equal (const Element& right) const {
@@ -55,6 +55,10 @@ public:
         return  !equal(right);
     }
 
+    friend ostream& operator << (ostream& os, const Element& element) {
+        os << element.name;
+        return os;
+    }
 public:
     ElementSet operator + (const Element  & left);
 

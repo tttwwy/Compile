@@ -18,9 +18,14 @@ public:
 
     }
 
-    void setGotoTable(int X,int to)
+    void setGotoTable(int x,int to)
     {
-        gotoTable[X] = to;
+        gotoTable[x] = to;
+//        map<int,int>::iterator p = gotoTable.find(x);
+//        if (p == gotoTable.end())
+//            gotoTable[x] = to;
+//        else
+//            return gotoTable[x];
     }
 
     int go(int x)
@@ -111,10 +116,6 @@ public:
         this->id = id;
     }
 
-    void setGotoTable(int from,int X,int to)
-    {
-
-    }
 
     void clear()
     {
@@ -122,14 +123,14 @@ public:
         sets.clear();
     }
 
-    bool isExisted(ItemSet &set)
+    int find(ItemSet &set)
     {
         for (int i = 0;i < sets.size();i++)
         {
             if (sets[i] == set)
-                return true;
+                return i;
         }
-        return false;
+        return -1;
     }
 
     int size()
@@ -151,7 +152,7 @@ public:
     int push_back(Item &set)
     {
         ItemSet temp(set);
-       return push_back(temp);
+        return push_back(temp);
     }
 
     const ItemSet& operator [] (int pos) const {

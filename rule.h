@@ -34,12 +34,12 @@ public:
         return right;
     }
     friend ostream& operator << (ostream& os, const Rule& rule) {
-        os << rule.left.name << "->";
+        os << rule.left << "->";
         for (int i = 0;i < rule.right.size();i++)
         {
-            os << rule.right[i].name <<" ";
+            os << rule.right[i] <<" ";
         }
-        os << endl;
+
         return os;
     }
     int size()
