@@ -9,6 +9,7 @@
 #include <queue>
 #include <set>
 #include <iomanip>
+#include <stack>
 using namespace std;
 class Generator
 {
@@ -45,6 +46,9 @@ public:
     int eofTokenId;
     bool inited;
     ItemSetEx itemSetEx;
+    vector <vector<Action> > action;
+    vector <vector<int> > goTo;
+
     Generator()
     {
         beginTokenId = -1;
@@ -534,7 +538,9 @@ public:
                     {
                         if (itemSet.go(elementId) >= 0)
                         {
-                            temp = action[i][termMap[elementId]];
+                            int  m = termMap[elementId];
+                            temp = action[i][m];
+
                             if (temp.type == Action::error)
                             {
                                 temp.type = Action::shift;
@@ -544,7 +550,7 @@ public:
                             }
                             else if (temp.type == Action::shift)
                             {
-                                cout << "移进-规约冲突！" << endl;
+                                cout << "移进-移进冲突！" << endl;
                             }
                         }
                     }
@@ -636,6 +642,8 @@ public:
             cout << endl;
         }
 
+        this->action = action;
+        this->goTo = goTo;
     }
     bool generator()
     {
@@ -647,6 +655,53 @@ public:
         genItemSex();
         genTable();
         return true;
+    }
+
+    int getNext()
+    {
+
+    }
+
+    bool parser()
+    {
+        vector<int> w;
+        stack<int> stateStack;
+        stack<int> eleStack;
+        int ip = getNext();
+        stateStack.push(0);
+        eleStack.push(beginTokenId);
+        while(1)
+        {
+            Action actiontemp = action[stateStack.top()][ip] ;
+            if (actiontemp.type == Action::shift)
+            {
+                stateStack.push(actiontemp.state);
+                eleStack.push(actiontemp.state);
+                ip = getNext();
+            }
+
+            else if (actiontemp.type == Action::reduce)
+            {
+                IRule rule = getIRule(actiontemp.rule);
+                for (int i = 0;i < rule.size();i++)
+                {
+                    stateStack.pop();
+                    eleStack.pop();
+                }
+                stateStack.push(rule.left);
+                eleStack.push(goTo[stateStack.top()][rule.left]);
+                showIRule(rule);
+            }
+            else if (actiontemp.type == Action::accept)
+            {
+                cout << "语法分析完成！" << endl;
+                return true;
+            }
+            else
+            {
+                cout << "Error!";
+            }
+        }
     }
 };
 

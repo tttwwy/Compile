@@ -1,11 +1,18 @@
 #ifndef GRAMMAR_H
 #define GRAMMAR_H
 #include "rule.h"
+#include "element.h"
+#include "elementset.h"
+#include "fstream"
+#include <iostream>
+#include <sstream>
+using namespace std;
 class Grammar
 {
 public:
     vector<Rule> rules;
     Rule start;
+    ElementSet elements;
     void add(Rule rule)
     {
         rules.push_back(rule);
@@ -22,6 +29,70 @@ public:
     vector<Rule> getRules()
     {
         return rules;
+    }
+
+    void getFileElement(string filename)
+    {
+        int nonTerminator,terminator;
+
+        fstream file;
+        file.open(filename.c_str(),ios::in);
+        file >> nonTerminator;
+        string name;
+        for (int i = 0;i < nonTerminator;i++)
+        {
+            file >> name;
+            cout << name;
+            elements.push_back(Element(Element::non_terminator,name));
+        }
+        file >> terminator;
+        for (int i = 0;i < terminator;i++)
+        {
+            file >> name;
+            elements.push_back(Element(Element::terminator,name));
+        }
+        for (int i = 0;i < elements.size();i++)
+            cout << elements[i] << endl;
+        file.close();
+    }
+
+    void getFileRule(string filename)
+    {
+        fstream file;
+        string line,leftstr,temp,rightstr;
+
+        file.open(filename.c_str(),ios::in);
+        while(file)
+        {
+            getline(file,line);
+//            cout << line;
+            stringstream stream(line);
+            stream >> leftstr;
+            stream >> temp;
+            Element left;
+            ElementSet right;
+            for (int i = 0;i < elements.size();i++)
+            {
+                if (elements[i].name == leftstr)
+                {
+                    left = elements[i];
+                    break;
+                }
+            }
+            while(stream >> rightstr)
+            {
+                for (int i = 0;i < elements.size();i++)
+                {
+                    if (elements[i].name == rightstr)
+                    {
+                        right.push_back(elements[i]);
+                    }
+                }
+            }
+            add(Rule(left,right));
+            cout << Rule(left,right) << endl;
+        }
+        file.close();
     }
 
     void showRules()

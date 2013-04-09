@@ -40,7 +40,7 @@ public:
 
     Element eof()
     {
-        return Element(terminator,"$");
+        return Element(terminator,"#");
     }
 
     bool equal (const Element& right) const {

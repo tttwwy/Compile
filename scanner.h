@@ -3,8 +3,9 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-
+#include "element.h"
 using namespace std;
+
 typedef enum
 {
     ELSE = 1,IF,INT,DOUBLE,CHAR,RETURN,VOID,WHILE,FOR,
