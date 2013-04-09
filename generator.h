@@ -550,7 +550,7 @@ public:
                             }
                             else if (temp.type == Action::shift)
                             {
-                                cout << "ÒÆ½ø-ÒÆ½ø³åÍ»£¡" << endl;
+//                                cout << "ÒÆ½ø-ÒÆ½ø³åÍ»£¡" << endl;
                             }
                         }
                     }
