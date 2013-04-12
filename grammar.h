@@ -42,7 +42,7 @@ public:
         for (int i = 0;i < nonTerminator;i++)
         {
             file >> name;
-            cout << name;
+//            cout << name;
             elements.push_back(Element(Element::non_terminator,name));
         }
         file >> terminator;
@@ -51,8 +51,8 @@ public:
             file >> name;
             elements.push_back(Element(Element::terminator,name));
         }
-        for (int i = 0;i < elements.size();i++)
-            cout << elements[i] << endl;
+//        for (int i = 0;i < elements.size();i++)
+//            cout << elements[i] << endl;
         file.close();
     }
 
@@ -65,10 +65,12 @@ public:
         while(file)
         {
             getline(file,line);
-//            cout << line;
+            //            cout << line;
             stringstream stream(line);
-            stream >> leftstr;
-            stream >> temp;
+            if (!(stream >> leftstr))
+                break;
+            if (!(stream >> temp))
+                break;
             Element left;
             ElementSet right;
             for (int i = 0;i < elements.size();i++)
@@ -90,7 +92,7 @@ public:
                 }
             }
             add(Rule(left,right));
-            cout << Rule(left,right) << endl;
+//            cout << Rule(left,right) << endl;
         }
         file.close();
     }

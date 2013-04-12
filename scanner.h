@@ -1,9 +1,11 @@
+#ifndef SCANNER_H
+#define SCANNER_H
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <vector>
-#include "element.h"
+
 using namespace std;
 
 typedef enum
@@ -19,7 +21,7 @@ typedef enum
     START = 1,DFANUM,DFAID,SYM,DFACHAR,DFASTR,DONE,DFAERROR
 } DFAState;
 
-struct token
+struct Token
 {
     Types type;
     string value;
@@ -35,14 +37,16 @@ public:
     bool deleteComment();
     char getNext();
     void getBack();
+    vector<Token> getToken();
     DFAState getstate(char c);
     Types getType(string str);
     bool scan();
     string code;
-    vector<token> tokens;
-    vector<token> id;
+    vector<Token> tokens;
+    vector<Token> id;
     void print();
     unsigned int index;
 
 };
 
+#endif

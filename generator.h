@@ -10,6 +10,7 @@
 #include <set>
 #include <iomanip>
 #include <stack>
+#include "scanner.h"
 using namespace std;
 class Generator
 {
@@ -45,9 +46,17 @@ public:
     int beginRuleId;
     int eofTokenId;
     bool inited;
+    int id;
     ItemSetEx itemSetEx;
     vector <vector<Action> > action;
     vector <vector<int> > goTo;
+    map<int,int> nonTermMap;
+    map<int,int> termMap;
+    //非终结符号表
+    vector<int> nonTerm;
+    //终结符号表
+    vector<int> term;
+    vector<int> w;
 
     Generator()
     {
@@ -104,6 +113,9 @@ public:
         inited = false;
         beginTokenId = -1;
         beginRuleId = -1;
+        id = 0;
+        nonTermMap.clear();
+        termMap.clear();
     }
 
     int findToken(Element e)
@@ -264,17 +276,17 @@ public:
             first(idStr[i],firstSet,bn);
         }
         canNull = bn;
-        cout <<"求串的First集:" ;
-        for (int i = 0;i < idStr.size();i++)
-        {
-            elements[idStr[i]];
-        }
-        cout << endl;
-        for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
-        {
-            cout << elements[*p] <<" ";
-        }
-        cout << endl;
+                cout <<"求串的First集:" ;
+                for (int i = 0;i < idStr.size();i++)
+                {
+                    elements[idStr[i]];
+                }
+                cout << endl;
+                for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
+                {
+                    cout << elements[*p] <<" ";
+                }
+                cout << endl;
     }
 
     void lr1Closure(ItemSet & C)
@@ -414,7 +426,7 @@ public:
         ItemSet first(Item(beginRuleId,0,eofTokenId));
         lr1Closure(first);
 
-        showItemSet(first);
+//        showItemSet(first);
 
 
 
@@ -454,13 +466,8 @@ public:
     void genTable()
     {
 
-        //非终结符号表
-        vector<int> nonTerm;
-        map<int,int> nonTermMap;
 
-        //终结符号表
-        vector<int> term;
-        map<int,int> termMap;
+
 
         //        //规则表
         //        vector<int> rule;
@@ -492,8 +499,13 @@ public:
         }
 
 
-        vector <vector<Action> > action(itemSetEx.size(),vector<Action>(term.size()));
-        vector <vector<int> > goTo(itemSetEx.size(),vector<int>(nonTerm.size()));
+        action.resize(itemSetEx.size());
+        goTo.resize(itemSetEx.size());
+        for (int i = 0;i < action.size();i++)
+        {
+            action[i].resize(term.size());
+            goTo[i].resize(nonTerm.size());
+        }
         for (int i = 0;i < goTo.size();i++)
         {
             for (int j = 0;j < goTo[i].size();j++)
@@ -503,10 +515,7 @@ public:
         }
 
 
-        int stateCount = itemSetEx.size();
-        int actionCount = term.size();
-        int goToCount = nonTerm.size();
-        int ruleCount = rules.size();
+
         for (int i = 0;i < itemSetEx.size();i++)
         {
             ItemSet itemSet = itemSetEx[i];
@@ -550,7 +559,7 @@ public:
                             }
                             else if (temp.type == Action::shift)
                             {
-//                                cout << "移进-移进冲突！" << endl;
+                                //                                cout << "移进-移进冲突！" << endl;
                             }
                         }
                     }
@@ -642,8 +651,6 @@ public:
             cout << endl;
         }
 
-        this->action = action;
-        this->goTo = goTo;
     }
     bool generator()
     {
@@ -659,12 +666,42 @@ public:
 
     int getNext()
     {
+        if (id < w.size())
+        {
 
+            return  w[id++];
+
+
+        }
+        return -1;
+    }
+
+    bool getTokens(vector<Token> tokens)
+    {
+        string name[34] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","<=",">=","==","!=","/*","*/","<",">","=","+","-","*","/",";",",","(",")","[","]","{","}","NUM","ID","STR","ERROR"};
+        vector<int> ww;
+        for (int i = 0;i < tokens.size();i++)
+        {
+            for (int j = 0;j < elements.size();j++)
+            {
+                if (elements[j].name == name[tokens[i].type-1])
+                {
+                    ww.push_back(j);
+                    break;
+                }
+            }
+        }
+        if (ww.size() <= 0)
+            return false;
+        this->w = ww;
+        return true;
     }
 
     bool parser()
     {
-        vector<int> w;
+
+        for (int i = 0;i < w.size();i++)
+            cout << elements[w[i]].name << endl;
         stack<int> stateStack;
         stack<int> eleStack;
         int ip = getNext();
@@ -672,25 +709,31 @@ public:
         eleStack.push(beginTokenId);
         while(1)
         {
-            Action actiontemp = action[stateStack.top()][ip] ;
+            Action actiontemp = action[stateStack.top()][termMap[ip]] ;
             if (actiontemp.type == Action::shift)
             {
+                cout << "移入：" << actiontemp.state << "  " << elements[ip].name << endl;
                 stateStack.push(actiontemp.state);
-                eleStack.push(actiontemp.state);
+                eleStack.push(ip);
                 ip = getNext();
             }
 
             else if (actiontemp.type == Action::reduce)
             {
+                cout << "规约:";
                 IRule rule = getIRule(actiontemp.rule);
+                showIRule(rule);
                 for (int i = 0;i < rule.size();i++)
                 {
                     stateStack.pop();
+                    cout << "出栈!" << endl;
                     eleStack.pop();
                 }
-                stateStack.push(rule.left);
-                eleStack.push(goTo[stateStack.top()][rule.left]);
-                showIRule(rule);
+
+                eleStack.push(rule.left);
+                int temp = stateStack.top();
+                stateStack.push(goTo[temp][nonTermMap[rule.left]]);
+                cout << "入栈：" << goTo[temp][nonTermMap[rule.left]] << elements[rule.left] << endl;
             }
             else if (actiontemp.type == Action::accept)
             {
@@ -700,6 +743,7 @@ public:
             else
             {
                 cout << "Error!";
+                return false;
             }
         }
     }

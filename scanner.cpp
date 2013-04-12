@@ -2,6 +2,7 @@
 
 Scanner::Scanner()
 {
+
 }
 
 bool Scanner::getCode(string path)
@@ -102,6 +103,11 @@ void Scanner::getBack()
 {
     if (index > 0)
         index--;
+}
+
+vector<Token> Scanner::getToken()
+{
+    return tokens;
 }
 
 DFAState Scanner::getstate(char c)
@@ -382,7 +388,7 @@ bool Scanner::scan()
         }
         else if (state == DONE)
         {
-            token temp;
+            Token temp;
             if (type == ERROR)
             {
                 cout <<line<<":"<< "非法变量！"<< endl;
@@ -415,6 +421,8 @@ bool Scanner::scan()
 
         }
     }
+//    this->success = success;
+
     return success;
 }
 

@@ -5,35 +5,37 @@
 #include "grammar.h"
 #include "generator.h"
 #include "rule.h"
+#include <fstream>
 using namespace std;
 
 
 int main()
 {
-    //    Scanner a;
-    //    string b;
-    //    cin >> b;
-    //    if(a.getCode(b))
-    //    {
-    //        if(a.scan())
-    //            a.print();
-    //    }
+    streambuf* coutBuf = cout.rdbuf();
+    ofstream of("c:\\out.txt");
+    // 获取文件out.txt流缓冲区指针
+    streambuf* fileBuf = of.rdbuf();
+
+    // 设置cout流缓冲区指针为out.txt的流缓冲区指针
+    cout.rdbuf(fileBuf);
+
+
     Grammar  grammar;
     grammar.getFileElement("c:\\element.txt");
     grammar.getFileRule("c:\\cfg.txt");
-//    Element  S(Element::non_terminator, "S");
-//    Element  L(Element::non_terminator, "L");
-//    Element  R(Element::non_terminator, "R");
+    //    Element  S(Element::non_terminator, "S");
+    //    Element  L(Element::non_terminator, "L");
+    //    Element  R(Element::non_terminator, "R");
 
-//    Element  equal(Element::terminator, "=");
-//    Element  multiply(Element::terminator, "*");
-//    Element  i(Element::terminator, "i");
+    //    Element  equal(Element::terminator, "=");
+    //    Element  multiply(Element::terminator, "*");
+    //    Element  i(Element::terminator, "i");
 
-//    grammar.add(Rule(S, L+equal+R));
-//    grammar.add(Rule(S, R));
-//    grammar.add(Rule(L, multiply+R));
-//    grammar.add(Rule(L,i));
-//    grammar.add(Rule(R, L));
+    //    grammar.add(Rule(S, L+equal+R));
+    //    grammar.add(Rule(S, R));
+    //    grammar.add(Rule(L, multiply+R));
+    //    grammar.add(Rule(L,i));
+    //    grammar.add(Rule(R, L));
 
 
 
@@ -92,7 +94,7 @@ int main()
     //    grammar.add(Rule(e_param_list, e_expr));
     //    grammar.add(Rule(e_param_list, e_param_list + COMMA + e_expr));
     grammar.setStart(Element(Element::non_terminator,"E"));
-    grammar.showRules();
+//    grammar.showRules();
 
     Generator generator;
     if(!generator.init(grammar)) {
@@ -101,9 +103,29 @@ int main()
     }
 
     if(!generator.generator()) {
-        std::cout << "error generator LALR table." << std::endl;
+        cout << "error generator LALR table." << std::endl;
         return 1;
     }
+
+    Scanner scanner;
+    string fileName("c:\\1.txt");
+//    cin >> fileName;
+    if(scanner.getCode(fileName))
+    {
+        if(!scanner.scan())
+        {
+            cout << "语法分析扫描失败！" << endl;
+            return 1;
+        }
+        scanner.print();
+    }
+
+    if (!generator.getTokens(scanner.getToken()))
+    {
+        cout << "获取Token表失败！" << endl;
+        return 1;
+    }
+    generator.parser();
 
 }
 
