@@ -119,7 +119,7 @@ DFAState Scanner::getstate(char c)
         return DFANUM;
     else if ((c >= 'A' && c <= 'Z')|| (c >= 'a' && c <= 'z')|| c == '_')
         return DFAID;
-    else if (c == '>' || c == '<' || c =='=' || c == '!')
+    else if (c == '>' || c == '<' || c =='=' || c == '!'|| c == '+' || c == '-')
         return SYM;
     else if (c == '\'')
         return DFACHAR;
@@ -133,6 +133,12 @@ Types Scanner::getType(string str)
 {
     if (str == "else")
         return ELSE;
+    if (str == "main")
+        return MAIN;
+    if (str == "printf")
+        return PRINTF;
+    if (str == "scanf")
+        return SCANF;
     if (str == "if")
         return IF;
     if (str == "int")
@@ -191,6 +197,12 @@ Types Scanner::getType(string str)
         return LCOMMENT;
     if (str == "*/")
         return RCOMMENT;
+    if (str == "&")
+        return ADDR;
+    if (str == "++")
+        return PLUSPLUS;
+    if (str == "--")
+        return MINUSMINUS;
 
 
 
@@ -231,7 +243,7 @@ bool Scanner::scan()
             str = "";
             ch = getNext();
             if (ch == '\0')
-                return success;
+                break;
             if (ch == '\n')
                 line++;
             state = getstate(ch);
@@ -377,10 +389,13 @@ bool Scanner::scan()
         }
         else if (state == SYM)
         {
+            char temp = ch;
             ch = getNext();
             if (ch == '\0')
                 return false;
-            if (ch == '=')
+            else if (ch == '=')
+                str += ch;
+            else if ((ch == '+' && temp == '+')||(ch == '-' && temp == '-'))
                 str += ch;
             else
                 getBack();
@@ -421,14 +436,22 @@ bool Scanner::scan()
 
         }
     }
-//    this->success = success;
+    //    this->success = success;
 
+    for (int i = 0;i < tokens.size();i++)
+    {
+        if (tokens[i].type == ID && i + 1 < tokens.size() && tokens[i+1].type == LMBRACKET)
+        {
+            tokens[i].type = ARRAY;
+        }
+
+    }
     return success;
 }
 
 void Scanner::print()
 {
-    string name[34] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","LE","GE","EQ","NEQ","LCOMMENT","RCOMMENT","LT","GT","ASSIGN","PLUS","MINUS","MULTI","RDIV","SEMI","COMMA","LPAREN","RPAREN","LMBRACKET","RMBRACKET","LBBRACKET","RBBRACKET","NUM","ID","STR","ERROR"};
+    string name[41] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","LE","GE","EQ","NEQ","LCOMMENT","RCOMMENT","LT","GT","ASSIGN","PLUS","MINUS","MULTI","RDIV","SEMI","COMMA","LPAREN","RPAREN","LMBRACKET","RMBRACKET","LBBRACKET","RBBRACKET","NUM","ID","STR","ERROR","ADDR","PLUSPLUS","MINUSMINUS","PRINTF","SCANF","MAIN","ARRAY"};
 
     for (int i = 0;i < tokens.size();i++)
     {

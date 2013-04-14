@@ -1,0 +1,58 @@
+S int main ( ) { block } 
+type int 
+type double 
+type char 
+block sentence 
+block sentence block 
+sentence { block } 
+sentence E ; 
+E E + T 
+E E - T 
+E T 
+T T * F 
+T T / F 
+T F 
+F ( E ) 
+F num 
+F id 
+F array [ E ] 
+sentence return E ; 
+sentence define 
+define type id_name 
+id_name id , id_name 
+id_name id ; 
+id_name id = E ;
+id_name array [ num ] = { nums } ; 
+nums num , nums 
+nums num 
+sentence set_value ; 
+set_value left = E 
+left id 
+left array [ E ] 
+sentence loop_expression 
+loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
+bool_expression G op H 
+op >= 
+op <= 
+op < 
+op > 
+H E 
+forsentence sentence 
+for_set_value set_value 
+IncorDec Inc_expression 
+IncorDec Dec_expression 
+Inc_expression id ++ 
+Dec_expression id -- 
+sentence if_expression 
+if_expression if ( bool_expression ) ifsentence else sentence 
+ifsentence sentence 
+sentence inout_expression 
+inout_expression printf_expression 
+inout_expression scanf_expression 
+printf_expression printf ( string ) ; 
+printf_expression printf ( string , expressions ) ; 
+expressions id , expressions 
+expressions id 
+scanf_expression scanf ( string , getaddr ) ; 
+getaddr & id 
+G E 

@@ -81,7 +81,7 @@ public:
 
     bool push_back(Item &item)
     {
-        for (int i = 0;i < items.size();i++)
+        for (unsigned int i = 0;i < items.size();i++)
         {
             if (items[i] == item)
                 return false;
@@ -125,7 +125,7 @@ public:
 
     int find(ItemSet &set)
     {
-        for (int i = 0;i < sets.size();i++)
+        for (unsigned int i = 0;i < sets.size();i++)
         {
             if (sets[i] == set)
                 return i;
@@ -140,7 +140,7 @@ public:
 
     int push_back(ItemSet &set)
     {
-        for (int i = 0;i < sets.size();i++)
+        for (unsigned int i = 0;i < sets.size();i++)
         {
             if (sets[i] == set)
                 return i;
@@ -156,10 +156,14 @@ public:
     }
 
     const ItemSet& operator [] (int pos) const {
+        if (pos >= 0 && pos < sets.size())
         return sets.at(pos);
+        cout << "数组越界!" << endl;
     }
     ItemSet&  operator [] (int pos) {
+        if (pos >= 0 && pos < sets.size())
         return sets.at(pos);
+        cout << "数组越界!" << endl;
     }
 };
 

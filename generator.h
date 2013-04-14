@@ -56,7 +56,10 @@ public:
     vector<int> nonTerm;
     //终结符号表
     vector<int> term;
+
+    //token表
     vector<int> w;
+    vector<int> line;
 
     Generator()
     {
@@ -172,7 +175,9 @@ public:
 
         vector<Rule> temp1 = grammar.getRules();
         for (int i = 0;i < temp1.size();i++)
+        {
             addRule(temp1[i]);
+        }
 
         //扩展文法
         ElementSet startSet;
@@ -192,7 +197,7 @@ public:
         //        cout << beginTokenId <<" " << beginRuleId << endl;
         cout << "符号集："<< endl;
         for (int i = 0;i < elements.size();i++)
-            cout << elements[i].type<<" "<<elements[i] << endl;
+            cout << i << ":" << elements[i].type<<" "<<elements[i] << endl;
 
         cout << "规则集:" << endl;
         for (int i = 0;i < rules.size();i++)
@@ -238,11 +243,13 @@ public:
     void first(int id,set<int> &firstSet,bool &canNull )
     {
 
-        if (id == Item::invalid_forward || getElement(id).isTerminator())
+//        cout << "求First集：" << elements[id].name << endl;
+        if ( getElement(id).isTerminator())
         {
             firstSet.insert(id);
+            canNull = false;
         }
-        else
+        else if (getElement(id).isNonTerminator())
         {
             for (int i = 0;i < rulesSize();i++)
             {
@@ -257,13 +264,23 @@ public:
                         bool bn = true;
                         for (int k = 0;bn && k < rule.right.size();k++ )
                         {
-                            first(rule.getRight(k),firstSet,bn);
+                            set<int>  temp;
+                            if (rule.getRight(k) != id)
+                            {
+
+                                first(rule.getRight(k),temp,bn);
+                                for (set<int>::iterator p = temp.begin();p != temp.end();p++)
+                                    firstSet.insert(*p);
+                            }
                         }
-                        canNull = true;
+                        canNull = bn;
                     }
                 }
             }
         }
+//        for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
+//            cout << elements[*p];
+//        cout << endl;
     }
 
     //串的First集
@@ -276,17 +293,17 @@ public:
             first(idStr[i],firstSet,bn);
         }
         canNull = bn;
-                cout <<"求串的First集:" ;
-                for (int i = 0;i < idStr.size();i++)
-                {
-                    elements[idStr[i]];
-                }
-                cout << endl;
-                for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
-                {
-                    cout << elements[*p] <<" ";
-                }
-                cout << endl;
+        //                cout <<"求串的First集:" ;
+        //                for (int i = 0;i < idStr.size();i++)
+        //                {
+        //                    elements[idStr[i]];
+        //                }
+        //                cout << endl;
+        //                for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
+        //                {
+        //                    cout << elements[*p] <<" ";
+        //                }
+        //                cout << endl;
     }
 
     void lr1Closure(ItemSet & C)
@@ -326,7 +343,10 @@ public:
                         {
                             for (set<int>::iterator p = firstSet.begin();p!=firstSet.end();p++)
                             {
-                                Item temp(i,0,*p);
+                                int rule = i;
+                                int pos = 0;
+                                int forward = *p;
+                                Item temp(rule,pos,forward);
                                 if (C.push_back(temp))
                                 {
                                     q.push(temp);
@@ -371,6 +391,7 @@ public:
                 to.push_back(item);
             }
         }
+
 
         lr1Closure(to);
         return to;
@@ -426,7 +447,7 @@ public:
         ItemSet first(Item(beginRuleId,0,eofTokenId));
         lr1Closure(first);
 
-//        showItemSet(first);
+        //        showItemSet(first);
 
 
 
@@ -438,6 +459,7 @@ public:
             run = false;
             for (int i = 0;i < itemSetEx.size();i++)
             {
+                int a;
                 for (int j = 0;j < elements.size();j++)
                 {
                     ItemSet temp = go(itemSetEx[i],j);
@@ -449,6 +471,8 @@ public:
                             //                        temp.setGotoTable(j,itemSetEx.size());
                             itemSetEx.push_back(temp);
                             itemSetEx[i].setGotoTable(j,itemSetEx.size()-1);
+//                            cout << itemSetEx.size()-1 << ":" << endl;
+//                            showItemSet(temp);
                             run = true;
                         }
                         else
@@ -458,6 +482,7 @@ public:
                     }
 
                 }
+                int b = 1;
             }
         }
         showItemSetEx();
@@ -678,30 +703,30 @@ public:
 
     bool getTokens(vector<Token> tokens)
     {
-        string name[34] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","<=",">=","==","!=","/*","*/","<",">","=","+","-","*","/",";",",","(",")","[","]","{","}","NUM","ID","STR","ERROR"};
-        vector<int> ww;
+        string name[41] = {"else","if","int","double","char","return","void","while","for","<=",">=","==","!=","/*","*/","<",">","=","+","-","*","/",";",",","(",")","[","]","{","}","num","id","string","ERROR","&","++","--","printf","scanf","main","array"};
+
         for (int i = 0;i < tokens.size();i++)
         {
             for (int j = 0;j < elements.size();j++)
             {
                 if (elements[j].name == name[tokens[i].type-1])
                 {
-                    ww.push_back(j);
+                    w.push_back(j);
+                    line.push_back(tokens[i].linenode);
                     break;
                 }
             }
         }
-        if (ww.size() <= 0)
-            return false;
-        this->w = ww;
+
         return true;
     }
 
     bool parser()
     {
 
-        for (int i = 0;i < w.size();i++)
-            cout << elements[w[i]].name << endl;
+
+//        for (int i = 0;i < w.size();i++)
+//            cout << elements[w[i]].name << endl;
         stack<int> stateStack;
         stack<int> eleStack;
         int ip = getNext();
@@ -709,6 +734,7 @@ public:
         eleStack.push(beginTokenId);
         while(1)
         {
+            cout << stateStack.top() << "  " << termMap[ip] << endl;
             Action actiontemp = action[stateStack.top()][termMap[ip]] ;
             if (actiontemp.type == Action::shift)
             {
@@ -742,7 +768,8 @@ public:
             }
             else
             {
-                cout << "Error!";
+                cout << line[id] - 1 << ":在" << elements[ip] <<"附近出现语法错误!" << endl;
+
                 return false;
             }
         }

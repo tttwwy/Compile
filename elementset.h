@@ -20,7 +20,7 @@ public:
     ElementSet& operator = (const ElementSet& element) {
         if(this != &element) {
             clear();
-            for (int i = 0;i < element.elements.size();i++)
+            for (unsigned int i = 0;i < element.elements.size();i++)
             {
                 push_back(element.elements[i]);
             }

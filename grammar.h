@@ -42,17 +42,19 @@ public:
         for (int i = 0;i < nonTerminator;i++)
         {
             file >> name;
-//            cout << name;
-            elements.push_back(Element(Element::non_terminator,name));
+            //            cout << name;
+            if (name.size() > 0)
+                elements.push_back(Element(Element::non_terminator,name));
         }
         file >> terminator;
         for (int i = 0;i < terminator;i++)
         {
             file >> name;
-            elements.push_back(Element(Element::terminator,name));
+            if (name.size() > 0)
+                elements.push_back(Element(Element::terminator,name));
         }
-//        for (int i = 0;i < elements.size();i++)
-//            cout << elements[i] << endl;
+//                for (int i = 0;i < elements.size();i++)
+//                    cout << elements[i] << endl;
         file.close();
     }
 
@@ -60,8 +62,11 @@ public:
     {
         fstream file;
         string line,leftstr,temp,rightstr;
-
         file.open(filename.c_str(),ios::in);
+        for (int i = 0;i < elements.size();i++)
+        {
+            cout << i << ":" << elements[i] << endl;
+        }
         while(file)
         {
             getline(file,line);
@@ -69,8 +74,7 @@ public:
             stringstream stream(line);
             if (!(stream >> leftstr))
                 break;
-            if (!(stream >> temp))
-                break;
+
             Element left;
             ElementSet right;
             for (int i = 0;i < elements.size();i++)
@@ -80,6 +84,10 @@ public:
                     left = elements[i];
                     break;
                 }
+                if (i == elements.size()-1)
+                {
+                    cout << "未知元素：" << left << endl;
+                }
             }
             while(stream >> rightstr)
             {
@@ -88,18 +96,21 @@ public:
                     if (elements[i].name == rightstr)
                     {
                         right.push_back(elements[i]);
+                        break;
                     }
+                    if (i == elements.size() - 1)
+                        cout << "未知元素：" << rightstr << endl;
                 }
             }
             add(Rule(left,right));
-//            cout << Rule(left,right) << endl;
+                        cout << Rule(left,right) << endl;
         }
         file.close();
     }
 
     void showRules()
     {
-        for (int i = 0;i < rules.size();i++)
+        for (unsigned int i = 0;i < rules.size();i++)
             cout << rules[i] << endl;
     }
 };
