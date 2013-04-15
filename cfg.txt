@@ -1,4 +1,16 @@
-S int main ( ) { block } 
+function function_define
+function function function_define
+function_define function_type id ( ) { block }
+function_define function_type id ( function_define_list ) { block }
+function_type type
+function_type void
+function_define_list type id
+function_define_list function_define_list , type id
+function_call id ( ) 
+function_call id ( function_call_list ) 
+function_call_list id
+function_call_list function_call_list , id
+S function
 type int 
 type double 
 type char 
@@ -16,6 +28,7 @@ F ( E )
 F num 
 F id 
 F array [ E ] 
+F function_call
 sentence return E ; 
 sentence define 
 define type id_name 

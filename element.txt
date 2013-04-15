@@ -1,5 +1,11 @@
-29
+35
 S
+function
+function_define
+function_type
+function_define_list
+function_call
+function_call_list
 type 
 block
 sentence
