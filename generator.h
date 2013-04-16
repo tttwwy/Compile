@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <stack>
 #include "scanner.h"
+
 using namespace std;
 class Generator
 {
@@ -239,11 +240,31 @@ public:
         }
     }
 
+    //    void follow(int id,set<int> &follow)
+    //    {
+    //        if (id == beginTokenId)
+    //        {
+    //            follow.insert(eofTokenId);
+    //            return;
+    //        }
+    //        for (int i = 0;i < rules.size();i++)
+    //        {
+    //            IRule rule = getIRule(i);
+    //            for (int j = 0;j < rule.size();j++)
+    //            {
+    //                if (id == rule.getRight(j) && j+ 1 < rule.size())
+    //                {
+    //                    first()
+    //                }
+    //            }
+    //        }
+    //    }
+
     //单个元素的First集
     void first(int id,set<int> &firstSet,bool &canNull )
     {
 
-//        cout << "求First集：" << elements[id].name << endl;
+        //        cout << "求First集：" << elements[id].name << endl;
         if ( getElement(id).isTerminator())
         {
             firstSet.insert(id);
@@ -278,9 +299,9 @@ public:
                 }
             }
         }
-//        for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
-//            cout << elements[*p];
-//        cout << endl;
+        //        for (set<int>::iterator p = firstSet.begin();p != firstSet.end();p++)
+        //            cout << elements[*p];
+        //        cout << endl;
     }
 
     //串的First集
@@ -471,8 +492,8 @@ public:
                             //                        temp.setGotoTable(j,itemSetEx.size());
                             itemSetEx.push_back(temp);
                             itemSetEx[i].setGotoTable(j,itemSetEx.size()-1);
-//                            cout << itemSetEx.size()-1 << ":" << endl;
-//                            showItemSet(temp);
+                            //                            cout << itemSetEx.size()-1 << ":" << endl;
+                            //                            showItemSet(temp);
                             run = true;
                         }
                         else
@@ -627,7 +648,7 @@ public:
         cout  << " ";
         for (int i = 0;i < term.size();i++)
         {
-            cout << setw(3) << elements[term[i]];
+            cout << setw(8) << elements[term[i]];
         }
         cout << endl;
         for (int i = 0;i < action.size();i++)
@@ -638,17 +659,21 @@ public:
 
                 if (action[i][j].type == Action::shift)
                 {
-                    cout << "S" <<  action[i][j].state;
+                    cout << "S" << setw(7) << action[i][j].state;
                 }
                 if (action[i][j].type == Action::reduce)
                 {
-                    cout << "r" << action[i][j].rule;
+                    cout << "r" <<setw(7) << action[i][j].rule;
                 }
                 if (action[i][j].type == Action::accept)
                 {
-                    cout << "acc" ;
+                    cout << setw(8) << "acc" ;
                 }
-                cout <<" ";
+                if (action[i][j].type == Action::error)
+                {
+                    cout << setw(8) << "error";
+                }
+
             }
             cout << endl;
         }
@@ -657,7 +682,7 @@ public:
         cout  << " ";
         for (int i = 0;i < nonTerm.size();i++)
         {
-            cout << setw(3) << elements[nonTerm[i]];
+            cout << setw(13) << elements[nonTerm[i]];
         }
         cout << endl;
         for (int i = 0;i < goTo.size();i++)
@@ -666,10 +691,10 @@ public:
             for (int j = 0;j < goTo[i].size();j++)
             {
 
-                if (goTo[i][j] != -1)
-                {
-                    cout <<  goTo[i][j];
-                }
+//                if (goTo[i][j] != -1)
+//                {
+                    cout <<  setw(13) << goTo[i][j];
+//                }
 
                 cout <<" ";
             }
@@ -725,13 +750,24 @@ public:
     {
 
 
-//        for (int i = 0;i < w.size();i++)
-//            cout << elements[w[i]].name << endl;
+        //        for (int i = 0;i < w.size();i++)
+        //            cout << elements[w[i]].name << endl;
         stack<int> stateStack;
         stack<int> eleStack;
         int ip = getNext();
         stateStack.push(0);
         eleStack.push(beginTokenId);
+        int sentence = 0;
+        for (int i = 0;i < elements.size();i++)
+        {
+            if (elements[i].name == "sentence")
+            {
+                sentence = i;
+                cout << "find sentence!" << endl;
+                break;
+            }
+
+        }
         while(1)
         {
             cout << stateStack.top() << "  " << termMap[ip] << endl;
@@ -769,8 +805,70 @@ public:
             else
             {
                 cout << line[id] - 1 << ":在" << elements[ip] <<"附近出现语法错误!" << endl;
-
                 return false;
+//                vector<int> p;
+//                for (int i = 0;i < elements.size();i++)
+//                {
+//                    if (elements[i].name == "{")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                    if (elements[i].name == "return")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                    if (elements[i].name == "(")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                    if (elements[i].name == "num")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                    if (elements[i].name == "id")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                    if (elements[i].name == "for")
+//                    {
+//                        p.push_back(i);
+//                    }
+//                }
+
+//                while(goTo[stateStack.top()][nonTermMap[sentence]] < 0 && !stateStack.empty() && !eleStack.empty())
+//                {
+//                    stateStack.pop();
+//                    eleStack.pop();
+//                }
+
+//                if (stateStack.empty() && eleStack.empty())
+//                    return false;
+//                int count = 0;
+//                while(1)
+//                {
+
+//                    if (ip == -1)
+//                        return false;
+
+//                    bool find = false;
+//                    for (int i = 0;i < p.size();i++)
+//                    {
+//                        if (ip == p[i])
+//                        {
+//                            int temp = stateStack.top();
+//                            stateStack.push(goTo[temp][nonTermMap[sentence]]);
+//                            eleStack.push(nonTermMap[p[i]]);
+//                            find = true;
+//                        }
+//                    }
+
+//                    if (find == true)
+//                        break;
+//                    else
+//                        ip = getNext();
+
+//                }
+
             }
         }
     }

@@ -8,8 +8,8 @@ function_define_list type id
 function_define_list function_define_list , type id
 function_call id ( ) 
 function_call id ( function_call_list ) 
-function_call_list id
-function_call_list function_call_list , id
+function_call_list F
+function_call_list function_call_list , F
 S function
 type int 
 type double 
@@ -43,8 +43,12 @@ set_value left = E
 left id 
 left array [ E ] 
 sentence loop_expression 
+sentence while_expression
 loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
+while_expression while ( bool_expression ) whilesentence
+whilesentence sentence
 bool_expression G op H 
+bool_expression F
 op >= 
 op <= 
 op < 
@@ -57,6 +61,7 @@ IncorDec Dec_expression
 Inc_expression id ++ 
 Dec_expression id -- 
 sentence if_expression 
+if_expression if ( bool_expression ) sentence
 if_expression if ( bool_expression ) ifsentence else sentence 
 ifsentence sentence 
 sentence inout_expression 
