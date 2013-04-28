@@ -1,0 +1,12 @@
+#ifndef NAMETABLE_H
+#define NAMETABLE_H
+#include "define.h"
+#include <vector>
+using namespace std;
+class NameTable
+{
+    vector<Table> table;
+
+};
+
+#endif // NAMETABLE_H

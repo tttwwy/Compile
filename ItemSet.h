@@ -155,13 +155,13 @@ public:
         return push_back(temp);
     }
 
-    const ItemSet& operator [] (int pos) const {
-        if (pos >= 0 && pos < sets.size())
+    const ItemSet& operator [] (unsigned int pos) const {
+        if (pos < sets.size())
         return sets.at(pos);
         cout << "数组越界!" << endl;
     }
-    ItemSet&  operator [] (int pos) {
-        if (pos >= 0 && pos < sets.size())
+    ItemSet&  operator [] (unsigned int pos) {
+        if (pos < sets.size())
         return sets.at(pos);
         cout << "数组越界!" << endl;
     }

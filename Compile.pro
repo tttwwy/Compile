@@ -17,5 +17,6 @@ HEADERS += \
     generator.h \
     elementset.h \
     item.h \
-    itemset.h
+    itemset.h \
+    nametable.h
 

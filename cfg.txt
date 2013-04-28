@@ -34,7 +34,7 @@ sentence define
 define type id_name 
 id_name id , id_name 
 id_name id ; 
-id_name id = E ;
+//id_name id = E ;
 id_name array [ num ] = { nums } ; 
 nums num , nums 
 nums num 

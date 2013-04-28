@@ -1,0 +1,44 @@
+#ifndef DEFINE_H
+#define DEFINE_H
+#include <string>
+#include <iostream>
+using namespace std;
+class Table
+{
+public:
+    string name;
+    string addr;
+    Table(string name,string addr)
+    {
+        this->name = name;
+        this->addr = addr;
+    }
+
+    Table()
+    {
+
+    }
+};
+
+class Token
+{
+public:
+    int type;
+    string value;
+    int linenode;
+    Token (int type)
+    {
+        this->type = type;
+    }
+    Token(int type,string value)
+    {
+        this->type = type;
+        this->value = value;
+    }
+    Token()
+    {
+        type = -1;
+        linenode = -1;
+    }
+};
+#endif // DEFINE_H

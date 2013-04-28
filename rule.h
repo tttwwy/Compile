@@ -9,6 +9,7 @@ class Rule
 public:
     Element left;
     ElementSet right;
+    int index;
     Rule()
     {
 
@@ -18,6 +19,13 @@ public:
     {
         left = left_;
         right = right_;
+        index = -1;
+    }
+    Rule(int index,Element left_,ElementSet right_)
+    {
+        left = left_;
+        right = right_;
+        this->index = index;
     }
 
     Rule(Element left)
@@ -33,7 +41,15 @@ public:
     {
         return right;
     }
+
+    int getIndex()
+    {
+        return index;
+    }
+
     friend ostream& operator << (ostream& os, const Rule& rule) {
+        if (rule.index > -1)
+            os << "index:" << rule.index << " ";
         os << rule.left << "->";
         for (int i = 0;i < rule.right.size();i++)
         {
@@ -55,6 +71,7 @@ class IRule
 public:
     int left;
     vector<int> right;
+    int index;
     IRule()
     {
 
@@ -64,6 +81,13 @@ public:
     {
         left = left_;
         right = right_;
+        index = -1;
+    }
+    IRule(int index,int left_,vector<int> right_)
+    {
+        left = left_;
+        right = right_;
+        this->index = index;
     }
     bool equal(const IRule&  rule) const {
         return this->left == rule.left && this->right == rule.right;
@@ -72,6 +96,11 @@ public:
     int getRight(int pos)
     {
         return right[pos];
+    }
+
+    int getIndex()
+    {
+        return index;
     }
 
     vector<int> getRight()

@@ -12,7 +12,7 @@
 #include <stack>
 #include <string>
 #include "scanner.h"
-
+#include "define.h"
 using namespace std;
 class Generator
 {
@@ -57,22 +57,7 @@ class Generator
         }
     };
 
-    class Table
-    {
-    public:
-        string name;
-        string value;
-        Table(string name,string value)
-        {
-            this->name = name;
-            this->value = value;
-        }
 
-        Table()
-        {
-
-        }
-    };
 
 private:
     stack<int> stateStack;

@@ -115,7 +115,7 @@ DFAState Scanner::getstate(char c)
 
     if (c == ' ' || c == '\n' || c == '\r' || c == '\t')
         return START;
-    else if (c >= '0' && c <= '9'||c == '-')
+    else if ((c >= '0' && c <= '9')||c == '-')
         return DFANUM;
     else if ((c >= 'A' && c <= 'Z')|| (c >= 'a' && c <= 'z')|| c == '_')
         return DFAID;

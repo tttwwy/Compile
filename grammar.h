@@ -62,6 +62,7 @@ public:
     {
         fstream file;
         string line,leftstr,temp,rightstr;
+        int index = -1;
         file.open(filename.c_str(),ios::in);
         for (int i = 0;i < elements.size();i++)
         {
@@ -69,11 +70,20 @@ public:
         }
         while(file)
         {
+            index = -1;
             getline(file,line);
             //            cout << line;
             stringstream stream(line);
             if (!(stream >> leftstr))
                 break;
+            if (leftstr[0] == '/')
+                continue;
+            if (leftstr[0] >= '0' && leftstr[0] <= '9')
+            {
+                stream.str(line);
+                stream >> index >> leftstr;
+            }
+
 
             Element left;
             ElementSet right;
@@ -102,8 +112,8 @@ public:
                         cout << "δ֪Ԫ�أ�" << rightstr << endl;
                 }
             }
-            add(Rule(left,right));
-                        cout << Rule(left,right) << endl;
+            add(Rule(index,left,right));
+                        cout << Rule(index,left,right) << endl;
         }
         file.close();
     }
