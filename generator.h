@@ -12,6 +12,8 @@
 #include <stack>
 #include <string>
 #include "scanner.h"
+#include "nametable.h"
+#include <sstream>
 
 using namespace std;
 class Generator
@@ -44,39 +46,28 @@ class Generator
     class Four
     {
     public:
+        string op;
         string a;
         string b;
         string c;
-        string d;
-        Four(string a,string b,string c,string d)
+        Four(string op,string a,string b,string c)
         {
+            this->op = op;
             this->a = a;
             this->b = b;
             this->c = c;
-            this->d = d;
+        }
+        friend ostream& operator << (ostream& os, const Four& four) {
+            os << "(" << four.op << "," << four.a << "," << four.b << "," << four.c << ")";
+            return os;
         }
     };
 
-    class Table
-    {
-    public:
-        string name;
-        string value;
-        Table(string name,string value)
-        {
-            this->name = name;
-            this->value = value;
-        }
 
-        Table()
-        {
-
-        }
-    };
 
 private:
     stack<int> stateStack;
-    stack<Token> eleStack;
+    stack<Base> eleStack;
 public:
     vector<IRule> rules;
     ElementSet elements;
@@ -98,9 +89,12 @@ public:
     //token表
     vector<Token> token;
     vector<Four> four;
-    map<string,string> nametable;
-    int nexttemp;
-    int nextfour;
+    NameTable nametable;
+
+
+
+    Base left;
+    vector<Base> pop;
 
     Generator()
     {
@@ -161,7 +155,7 @@ public:
         nonTermMap.clear();
         termMap.clear();
         nametable.clear();
-        nexttemp = 0;
+
     }
 
     int findToken(Element e)
@@ -791,9 +785,9 @@ public:
     bool select(int ruleid)
     {
         bool success = true;
-        if (rules[ruleid].index > -1)
+        if (ruleid > -1)
         {
-            switch (rules[ruleid].index)
+            switch (ruleid)
             {
             case 1:
                 success = function1();
@@ -804,48 +798,227 @@ public:
             case 3:
                 success = function3();
                 break;
+            case 4:
+                success = function4();
+                break;
+            case 5:
+                success = function5();
+                break;
+            case 6:
+                success = function6();
+                break;
+            case 7:
+                success = function7();
+                break;
+            case 8:
+                success = function8();
+                break;
+            case 9:
+                success = function9();
+                break;
+
+            case 10:
+                success = function10();
+                break;
+
             }
+            return success;
         }
+        return false;
     }
 
-    int findTable(string name)
+    template<class out_type,class in_value>
+    out_type convert(const in_value & t)
+
     {
-        map<string,string>::iterator p = nametable.find(name);
+
+        stringstream stream;
+
+        stream<<t;//向流中传值
+
+        out_type result;//这里存储转换结果
+
+        stream>>result;//向result中写入值
+
+        return result;
 
     }
-    int newtemp()
+
+    int send(string op,string a,string b,int result)
     {
-        return nexttemp++;
+        four.push_back(Four(op,a,b,nametable[result]));
     }
 
-    int genFour(string a,string b,string c,string d)
-    {
-        Four temp(a,b,c,d);
-        four.push_back(temp);
-    }
+
+
 
     //define type id_name
     bool function1()
     {
-        string name = eleStack.top().value;
-        eleStack.pop();
-        map<string,string>::iterator p = nametable.find(name);
-        if (p == nametable.end())
+
+        int i = nametable.newAddr(pop[0].value,pop[1].value);
+
+        if (i == -1)
         {
-            cout << "变量" << name << "重复定义！" << endl;
+            cout << "变量" << pop[1].value << "重复定义！" << endl;
             return false;
         }
-        nametable[name];
         return true;
     }
 
-    //E E + T
+    //F num
     bool function2()
     {
-        Table a;
-        string a,b;
-        a = eleStack.top().value;
+        if (pop.size() > 0)
+        {
+            left.value = pop[0].value;
+            left.flag = Base::num;
+            return true;
+        }
+        return false;
+    }
 
+    //F id
+    bool function3()
+    {
+        if (pop.size() > 0)
+        {
+            left.flag = Base::id;
+            left.addr = nametable.getAddr(pop[0].value);
+            if (left.addr == -1)
+            {
+                cout << "未定义的变量！" << endl;
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    bool function4()
+    {
+
+    }
+
+    bool function5()
+    {
+
+    }
+
+    string cal(string a,string op,string c)
+    {
+        int A = convert<int>(a);
+        int B = convert<int>(c);
+        int C = 0;
+
+        if (op == "+")
+            C =  A + B;
+        else if (op == "-")
+            C = A - B;
+        else if (op == "*")
+            C = A * B;
+        else if (op == "/")
+            C = A / B;
+
+
+        return convert<string>(C);
+
+    }
+
+    //E E +-*/ T
+    bool function6()
+    {
+
+        if (pop.size() > 2)
+        {
+
+            Base a = pop[0];
+            Base b = pop[1];
+            Base c = pop[2];
+
+            if (a.flag == Base::num && c.flag == Base::num)
+            {
+                left.value = cal(a.value,b.value,c.value);
+                left.flag = Base::num;
+            }
+            else
+            {
+                int addr = nametable.newTemp();
+                left.addr = addr;
+                left.flag = Base::id;
+                if (a.flag == Base::id)
+                {
+                    a.value = nametable[a.addr];
+                    nametable.releaseTemp(a.addr);
+                }
+                if (c.flag == Base::id)
+                {
+                    c.value = nametable[c.addr];
+                    nametable.releaseTemp(c.addr);
+                }
+                send(b.value,a.value,c.value,addr);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    bool function7()
+    {
+        if (pop.size() > 0)
+        {
+            left.addr = pop[0].addr;
+            left.value = pop[0].value;
+            left.flag = pop[0].flag;
+            return true;
+        }
+        return false;
+    }
+
+    bool function8()
+    {
+        if (pop.size() > 2)
+        {
+            left.addr = pop[1].addr;
+            left.value = pop[1].value;
+            left.flag = pop[1].flag;
+            return true;
+        }
+        return false;
+    }
+
+    bool function9()
+    {
+        if (pop.size() > 2)
+        {
+            string a;
+            if (pop[2].flag == Base::num)
+                a = pop[2].value;
+            else if (pop[2].flag == Base::id)
+                a = nametable[pop[2].addr];
+            send("MOV",a,"",pop[0].addr);
+            return true;
+        }
+        return false;
+    }
+
+    bool function10()
+    {
+        int i = nametable.newAddr(pop[0].value,pop[1].value);
+        if (i == -1)
+        {
+            cout << "变量" << pop[1].value << "重复定义！" << endl;
+            return false;
+        }
+        string a;
+        if (pop[3].flag == Base::num)
+            a = pop[3].value;
+        else if (pop[3].flag == Base::id)
+            a = nametable[pop[3].addr];
+        send("MOV",a,"",i);
+
+
+        return true;
     }
 
     bool parser()
@@ -855,11 +1028,9 @@ public:
         while(!eleStack.empty())
             eleStack.pop();
 
-        nexttemp= 0;
-        nextfour = 0;
         Token ip = getNext();
         stateStack.push(0);
-        eleStack.push(Token(beginTokenId));
+        eleStack.push(Base(beginTokenId));
 
         int sentence = 0;
         for (int i = 0;i < elements.size();i++)
@@ -882,7 +1053,7 @@ public:
             {
                 //                cout << "移入：" << actiontemp.state << "  " << elements[ip].name << endl;
                 stateStack.push(actiontemp.state);
-                eleStack.push(ip);
+                eleStack.push(Base(ip.type,ip.value));
                 ip = getNext();
             }
 
@@ -891,14 +1062,35 @@ public:
                 cout << "规约:";
                 IRule rule = getIRule(actiontemp.rule);
                 showIRule(rule);
+                pop.clear();
+
+
                 for (int i = 0;i < rule.size();i++)
                 {
                     stateStack.pop();
+                    pop.push_back(eleStack.top());
                     //                    cout << "出栈!" << endl;
-                    //                    eleStack.pop();
+                    eleStack.pop();
+                }
+                int k = pop.size();
+                for (int i = 0;i < k/2;i++)
+                {
+                    Base temp = pop[i];
+                    pop[i] =  pop[k  - i-1];
+                    pop[k  - i-1] = temp;
                 }
 
-                eleStack.push(Token(rule.left));
+                left.type = rule.left;
+                if (rule.index > 0)
+                {
+                    bool success = select(rule.index);
+                    if (success == false)
+                    {
+                        return false;
+                    }
+                }
+
+                eleStack.push(left);
                 int temp = stateStack.top();
                 stateStack.push(goTo[temp][nonTermMap[rule.left]]);
                 //                cout << "入栈：" << goTo[temp][nonTermMap[rule.left]] << elements[rule.left] << endl;
@@ -906,6 +1098,8 @@ public:
             else if (actiontemp.type == Action::accept)
             {
                 cout << "语法分析完成！" << endl;
+                for (int i = 0;i < four.size();i++)
+                    cout << four[i] << endl;
                 return true;
             }
             else

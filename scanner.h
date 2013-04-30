@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-
+#include "define.h"
 using namespace std;
 
 typedef enum
@@ -21,27 +21,6 @@ typedef enum
     START = 1,DFANUM,DFAID,SYM,DFACHAR,DFASTR,DONE,DFAERROR
 } DFAState;
 
-class Token
-{
-public:
-    int type;
-    string value;
-    int linenode;
-    Token (int type)
-    {
-        this->type = type;
-    }
-    Token(int type,string value)
-    {
-        this->type = type;
-        this->value = value;
-    }
-    Token()
-    {
-        type = -1;
-        linenode = -1;
-    }
-};
 
 class Scanner
 {

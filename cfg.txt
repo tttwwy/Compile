@@ -11,36 +11,38 @@ function_call id ( function_call_list )
 function_call_list F
 function_call_list function_call_list , F
 S function
-type int 
-type double 
-type char 
+7 type int 
+7 type double 
+7 type char 
 block sentence 
 block sentence block 
 sentence { block } 
 sentence E ; 
-E E + T 
-E E - T 
-E T 
-T T * F 
-T T / F 
-T F 
-F ( E ) 
-F num 
-F id 
-F array [ E ] 
-F function_call
+6 E E + T 
+6 E E - T 
+7 E T 
+6 T T * F 
+6 T T / F 
+7 T F 
+8 F ( E ) 
+2 F num 
+3 F id 
+4 F array [ E ] 
+5 F function_call
 sentence return E ; 
 sentence define 
-define type id_name 
+//1 define type id_name 
+10 define type id_name = E ;
+1 define type id_name  ;
 id_name id , id_name 
-id_name id ; 
+7 id_name id 
 //id_name id = E ;
 id_name array [ num ] = { nums } ; 
 nums num , nums 
 nums num 
 sentence set_value ; 
-set_value left = E 
-left id 
+9 set_value left = E 
+3 left id 
 left array [ E ] 
 sentence loop_expression 
 sentence while_expression
