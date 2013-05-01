@@ -97,13 +97,8 @@ public:
         return items.at(pos);
     }
 
-    //    ItemSet& operator = (const ItemSet& other) {
-    //        if(this != &other) {
-    //            this->clear();
-    //            add(other);
-    //        }
-    //        return *this;
-    //    }
+
+
 };
 
 class ItemSetEx{

@@ -1,21 +1,19 @@
-int k()
-{
-	return 0;
-}
 int main()
 {
-	int a;
-	if (a > 2)
+	int a = 3;
+	if (a > 3)
 	{
-		a = 1;
-		if (a > 3)
-		{
-		a  = 2;
-		}
+		a = 2;	
 	}
 	else
 	{
-	a = 3;
+		if (a == 3)
+		{
+			a = 2;		
+		}
+		else
+		{
+			a = 3;
+		}
 	}
-
 }

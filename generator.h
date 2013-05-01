@@ -1103,7 +1103,7 @@ public:
         for (int i = 0;i < four.size();i++)
         {
             cout << i << ":" << "(" << four[i].op << "," << four[i].a << "," << four[i].b << "," ;
-            if (four[i].op == "JMP" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" )
+            if (four[i].op == "JMP" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
                 cout  << four[i].addr ;
             else
                 cout << nametable[four[i].addr];

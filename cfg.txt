@@ -17,6 +17,7 @@ S function
 7 block sentence 
 block sentence block 
 12 sentence { block } 
+11 sentence { }
 11 sentence E ; 
 6 E E + T 
 6 E E - T 
@@ -53,6 +54,7 @@ whilesentence sentence
 7 op <= 
 7 op < 
 7 op > 
+7 op ==
 7 H E 
 7 G E 
 forsentence sentence 
