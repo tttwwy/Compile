@@ -18,5 +18,6 @@ HEADERS += \
     elementset.h \
     item.h \
     itemset.h \
-    nametable.h
+    nametable.h \
+    four.h
 

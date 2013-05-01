@@ -14,6 +14,7 @@
 #include "scanner.h"
 #include "nametable.h"
 #include <sstream>
+#include "four.h"
 
 using namespace std;
 class Generator
@@ -43,25 +44,7 @@ class Generator
 
     };
 
-    class Four
-    {
-    public:
-        string op;
-        string a;
-        string b;
-        string c;
-        Four(string op,string a,string b,string c)
-        {
-            this->op = op;
-            this->a = a;
-            this->b = b;
-            this->c = c;
-        }
-        friend ostream& operator << (ostream& os, const Four& four) {
-            os << "(" << four.op << "," << four.a << "," << four.b << "," << four.c << ")";
-            return os;
-        }
-    };
+
 
 
 
@@ -90,6 +73,7 @@ public:
     vector<Token> token;
     vector<Four> four;
     NameTable nametable;
+    int nextquad;
 
 
 
@@ -155,6 +139,7 @@ public:
         nonTermMap.clear();
         termMap.clear();
         nametable.clear();
+        nextquad = 0;
 
     }
 
@@ -820,11 +805,32 @@ public:
             case 10:
                 success = function10();
                 break;
+            case 11:
+                success = function11();
+                break;
+            case 12:
+                success = function12();
+                break;
+            case 13:
+                success = function13();
+                break;
+            case 14:
+                success = function14();
+                break;
+            case 15:
+                success = function15();
+                break;
+            case 16:
+                success = function16();
+                break;
+            case 17:
+                success = function17();
+                break;
 
             }
-            return success;
+            return true;
         }
-        return false;
+        return true;
     }
 
     template<class out_type,class in_value>
@@ -846,7 +852,9 @@ public:
 
     int send(string op,string a,string b,int result)
     {
-        four.push_back(Four(op,a,b,nametable[result]));
+        four.push_back(Four(op,a,b,result));
+        nextquad++;
+        return four.size();
     }
 
 
@@ -968,8 +976,13 @@ public:
         if (pop.size() > 0)
         {
             left.addr = pop[0].addr;
-            left.value = pop[0].value;
+            if (pop[0].value.size() == 0)
+                left.value = elements[pop[0].type].name;
+            else
+                left.value = pop[0].value;
             left.flag = pop[0].flag;
+            left.quad = pop[0].quad;
+
             return true;
         }
         return false;
@@ -997,6 +1010,7 @@ public:
             else if (pop[2].flag == Base::id)
                 a = nametable[pop[2].addr];
             send("MOV",a,"",pop[0].addr);
+            nametable.releaseTemp(pop[2].addr);
             return true;
         }
         return false;
@@ -1016,9 +1030,85 @@ public:
         else if (pop[3].flag == Base::id)
             a = nametable[pop[3].addr];
         send("MOV",a,"",i);
-
-
+        nametable.releaseTemp(pop[3].addr);
         return true;
+    }
+
+    bool function11()
+    {
+        left.addr = nextquad;
+        return true;
+    }
+
+    bool function12()
+    {
+        if (pop.size() > 2)
+        {
+            left.addr = pop[1].addr;
+            return true;
+        }
+        return false;
+    }
+    bool function13()
+    {
+        if (pop.size() < 3)
+            return false;
+        string a = pop[0].value;
+        if (pop[0].flag == Base::id)
+            a = nametable[pop[0].addr];
+        string b = pop[2].value;
+        if (pop[2].flag == Base::id)
+            b = nametable[pop[2].addr];
+        send(pop[1].value,a,b,nextquad+2);
+        send("JMP","","",0);
+        left.addr = nextquad;
+        return true;
+    }
+    bool function14()
+    {
+        string a;
+        if (pop[0].flag == Base::num)
+            a = pop[0].value;
+        if (pop[0].flag == Base::id)
+            a = nametable[pop[0].addr];
+        send("-",a,"0",nextquad+2);
+        send("JMP","","",0);
+        left.addr = nextquad;
+    }
+
+    bool function15()
+    {
+        Base bool_expression = pop[2];
+        four[bool_expression.addr-1].addr = nextquad;
+    }
+
+    bool function16()
+    {
+        send("JMP","","",0);
+        left.addr = nextquad;
+    }
+
+    bool function17()
+    {
+        Base bool_expression = pop[2];
+        Base ifsentence = pop[4];
+        Base sentence = pop[6];
+        four[bool_expression.addr-1].addr = ifsentence.addr;
+        four[ifsentence.addr-1].addr = sentence.addr;
+    }
+
+    void printQuad()
+    {
+
+        for (int i = 0;i < four.size();i++)
+        {
+            cout << i << ":" << "(" << four[i].op << "," << four[i].a << "," << four[i].b << "," ;
+            if (four[i].op == "JMP" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" )
+                cout  << four[i].addr ;
+            else
+                cout << nametable[four[i].addr];
+            cout << ")" << endl;
+        }
     }
 
     bool parser()
@@ -1033,6 +1123,8 @@ public:
         eleStack.push(Base(beginTokenId));
 
         int sentence = 0;
+        nextquad = 0;
+
         for (int i = 0;i < elements.size();i++)
         {
             if (elements[i].name == "sentence")
@@ -1098,8 +1190,7 @@ public:
             else if (actiontemp.type == Action::accept)
             {
                 cout << "语法分析完成！" << endl;
-                for (int i = 0;i < four.size();i++)
-                    cout << four[i] << endl;
+                printQuad();
                 return true;
             }
             else

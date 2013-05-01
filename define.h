@@ -7,6 +7,7 @@ class Base
 {
 public:
     enum Flag {
+        error = -1,
         id  = 0,
         num  = 1
     };
@@ -14,12 +15,14 @@ public:
     string value;
     int addr;
     Flag flag;
+    int quad;
 
     Base(int type,string value)
     {
         this->type = type;
         this->value = value;
-        flag = id;
+        flag = error;
+        quad = 0;
     }
     Base(int type)
     {

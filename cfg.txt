@@ -14,10 +14,10 @@ S function
 7 type int 
 7 type double 
 7 type char 
-block sentence 
+7 block sentence 
 block sentence block 
-sentence { block } 
-sentence E ; 
+12 sentence { block } 
+11 sentence E ; 
 6 E E + T 
 6 E E - T 
 7 E T 
@@ -29,44 +29,43 @@ sentence E ;
 3 F id 
 4 F array [ E ] 
 5 F function_call
-sentence return E ; 
-sentence define 
-//1 define type id_name 
+11 sentence return E ; 
+11 sentence define 
 10 define type id_name = E ;
 1 define type id_name  ;
-id_name id , id_name 
+//id_name id , id_name 
 7 id_name id 
-//id_name id = E ;
 id_name array [ num ] = { nums } ; 
 nums num , nums 
 nums num 
-sentence set_value ; 
+11 sentence set_value ; 
 9 set_value left = E 
 3 left id 
 left array [ E ] 
-sentence loop_expression 
-sentence while_expression
+11 sentence loop_expression 
+11 sentence while_expression
 loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
 while_expression while ( bool_expression ) whilesentence
 whilesentence sentence
-bool_expression G op H 
-bool_expression F
-op >= 
-op <= 
-op < 
-op > 
-H E 
+13 bool_expression G op H 
+14 bool_expression F
+7 op >= 
+7 op <= 
+7 op < 
+7 op > 
+7 H E 
+7 G E 
 forsentence sentence 
 for_set_value set_value 
 IncorDec Inc_expression 
 IncorDec Dec_expression 
 Inc_expression id ++ 
 Dec_expression id -- 
-sentence if_expression 
-if_expression if ( bool_expression ) sentence
-if_expression if ( bool_expression ) ifsentence else sentence 
-ifsentence sentence 
-sentence inout_expression 
+11 sentence if_expression 
+15 if_expression if ( bool_expression ) sentence
+17 if_expression if ( bool_expression ) ifsentence else sentence 
+16 ifsentence sentence 
+11 sentence inout_expression i
 inout_expression printf_expression 
 inout_expression scanf_expression 
 printf_expression printf ( string ) ; 
@@ -75,4 +74,3 @@ expressions id , expressions
 expressions id 
 scanf_expression scanf ( string , getaddr ) ; 
 getaddr & id 
-G E 

@@ -36,7 +36,7 @@ scanf_expression
 getaddr
 G
 define
-40
+41
 main
 else
 if
@@ -77,3 +77,4 @@ string
 printf
 scanf
 array
+M

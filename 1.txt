@@ -1,7 +1,21 @@
+int k()
+{
+	return 0;
+}
 int main()
 {
-	int a = 3;
-	int b;
-	b = 4 + a;
-	return 0;
+	int a;
+	if (a > 2)
+	{
+		a = 1;
+		if (a > 3)
+		{
+		a  = 2;
+		}
+	}
+	else
+	{
+	a = 3;
+	}
+
 }

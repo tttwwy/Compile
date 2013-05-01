@@ -133,8 +133,8 @@ Types Scanner::getType(string str)
 {
     if (str == "else")
         return ELSE;
-//    if (str == "main")
-//        return MAIN;
+    //    if (str == "main")
+    //        return MAIN;
     if (str == "printf")
         return PRINTF;
     if (str == "scanf")
@@ -426,7 +426,8 @@ bool Scanner::scan()
                 }
                 else
                 {
-                    temp.value = str;
+                    if (temp.type == ID)
+                        temp.value = str;
                     temp.linenode = line;
                     tokens.push_back(temp);
                 }
