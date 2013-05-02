@@ -36,18 +36,20 @@ block sentence block
 1 define type id_name  ;
 //id_name id , id_name 
 7 id_name id 
-id_name array [ num ] = { nums } ; 
-nums num , nums 
-nums num 
+22 define type array [ num ] = { nums } ; 
+22 define type array [ ] = { nums } ; 
+22 define type array [ num ] ; 
+21 nums num , nums 
+7 nums num 
 11 sentence set_value ; 
 9 set_value left = E 
 3 left id 
 left array [ E ] 
 11 sentence loop_expression 
 11 sentence while_expression
-loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
-while_expression while ( bool_expression ) whilesentence
-whilesentence sentence
+20 loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
+19 while_expression while ( bool_expression ) whilesentence
+16 whilesentence sentence
 13 bool_expression G op H 
 14 bool_expression F
 7 op >= 
@@ -57,12 +59,13 @@ whilesentence sentence
 7 op ==
 7 H E 
 7 G E 
-forsentence sentence 
-for_set_value set_value 
-IncorDec Inc_expression 
-IncorDec Dec_expression 
-Inc_expression id ++ 
-Dec_expression id -- 
+11 forsentence sentence 
+11 for_set_value set_value 
+11 sentence IncorDec ;
+11 IncorDec Inc_expression 
+11 IncorDec Dec_expression 
+18 Inc_expression id ++ 
+18 Dec_expression id -- 
 11 sentence if_expression 
 15 if_expression if ( bool_expression ) sentence
 17 if_expression if ( bool_expression ) ifsentence else sentence 

@@ -73,6 +73,7 @@ public:
     vector<Token> token;
     vector<Four> four;
     NameTable nametable;
+    vector<vector<Four> > tempfour;
     int nextquad;
 
 
@@ -826,11 +827,30 @@ public:
             case 17:
                 success = function17();
                 break;
+            case 18:
+                success = function18();
+                break;
+            case 19:
+                success = function19();
+                break;
+            case 20:
+                success = function20();
+                break;
+            case 21:
+                success = function21();
+                break;
+            case 22:
+                success = function22();
+                break;
+            case 23:
+                success = function23();
+                break;
+
 
             }
-            return true;
+            return success;
         }
-        return true;
+        return false;
     }
 
     template<class out_type,class in_value>
@@ -877,35 +897,46 @@ public:
     //F num
     bool function2()
     {
-        if (pop.size() > 0)
-        {
-            left.value = pop[0].value;
-            left.flag = Base::num;
-            return true;
-        }
-        return false;
+
+        left.value = pop[0].value;
+        left.flag = Base::num;
+        return true;
+
     }
 
     //F id
     bool function3()
     {
-        if (pop.size() > 0)
+        left.flag = Base::id;
+        left.addr = nametable.getAddr(pop[0].value);
+        if (left.addr == -1)
         {
-            left.flag = Base::id;
-            left.addr = nametable.getAddr(pop[0].value);
-            if (left.addr == -1)
-            {
-                cout << "未定义的变量！" << endl;
-                return false;
-            }
-            return true;
+            cout << "未定义的变量！" << endl;
+            return false;
         }
-        return false;
+        return true;
     }
 
     bool function4()
     {
+        int i = nametable.getAddr(pop[0].value);
+        if (i == -1)
+        {
+            cout << "变量" << pop[1].value << "未定义！" << endl;
+            return false;
+        }
+        string a;
+        if (pop[2].flag == Base::num)
+            a = pop[2].value;
+        if (pop[2].flag == Base::id)
+            a = nametable[pop[2].addr];
+        int j = nametable.newTemp();
+        send("MOV",nametable[i]+"+"+a,"",j);
+        nametable.releaseTemp(pop[2].addr);
+        left.addr = j;
+        left.flag = Base::id;
 
+        return true;
     }
 
     bool function5()
@@ -927,8 +958,6 @@ public:
             C = A * B;
         else if (op == "/")
             C = A / B;
-
-
         return convert<string>(C);
 
     }
@@ -936,84 +965,74 @@ public:
     //E E +-*/ T
     bool function6()
     {
+        Base a = pop[0];
+        string op = elements[pop[1].type].name;
+        Base c = pop[2];
 
-        if (pop.size() > 2)
+        if (a.flag == Base::num && c.flag == Base::num)
         {
-
-            Base a = pop[0];
-            Base b = pop[1];
-            Base c = pop[2];
-
-            if (a.flag == Base::num && c.flag == Base::num)
-            {
-                left.value = cal(a.value,b.value,c.value);
-                left.flag = Base::num;
-            }
-            else
-            {
-                int addr = nametable.newTemp();
-                left.addr = addr;
-                left.flag = Base::id;
-                if (a.flag == Base::id)
-                {
-                    a.value = nametable[a.addr];
-                    nametable.releaseTemp(a.addr);
-                }
-                if (c.flag == Base::id)
-                {
-                    c.value = nametable[c.addr];
-                    nametable.releaseTemp(c.addr);
-                }
-                send(b.value,a.value,c.value,addr);
-            }
-            return true;
+            left.value = cal(a.value,op,c.value);
+            left.flag = Base::num;
         }
-        return false;
+        else
+        {
+            int addr = nametable.newTemp();
+            left.addr = addr;
+            left.flag = Base::id;
+            if (a.flag == Base::id)
+            {
+                a.value = nametable[a.addr];
+                nametable.releaseTemp(a.addr);
+            }
+            if (c.flag == Base::id)
+            {
+                c.value = nametable[c.addr];
+                nametable.releaseTemp(c.addr);
+            }
+            send(op,a.value,c.value,addr);
+
+        }
+        return true;
+
     }
 
     bool function7()
     {
-        if (pop.size() > 0)
-        {
-            left.addr = pop[0].addr;
-            if (pop[0].value.size() == 0)
-                left.value = elements[pop[0].type].name;
-            else
-                left.value = pop[0].value;
-            left.flag = pop[0].flag;
-            left.quad = pop[0].quad;
 
-            return true;
-        }
-        return false;
+        left.addr = pop[0].addr;
+        if (pop[0].value.size() == 0)
+            left.value = elements[pop[0].type].name;
+        else
+            left.value = pop[0].value;
+        left.flag = pop[0].flag;
+
+
+        return true;
+
     }
 
     bool function8()
     {
-        if (pop.size() > 2)
-        {
-            left.addr = pop[1].addr;
-            left.value = pop[1].value;
-            left.flag = pop[1].flag;
-            return true;
-        }
-        return false;
+
+        left.addr = pop[1].addr;
+        left.value = pop[1].value;
+        left.flag = pop[1].flag;
+        return true;
+
     }
 
     bool function9()
     {
-        if (pop.size() > 2)
-        {
-            string a;
-            if (pop[2].flag == Base::num)
-                a = pop[2].value;
-            else if (pop[2].flag == Base::id)
-                a = nametable[pop[2].addr];
-            send("MOV",a,"",pop[0].addr);
-            nametable.releaseTemp(pop[2].addr);
-            return true;
-        }
-        return false;
+
+        string a;
+        if (pop[2].flag == Base::num)
+            a = pop[2].value;
+        else if (pop[2].flag == Base::id)
+            a = nametable[pop[2].addr];
+        send("MOV",a,"",pop[0].addr);
+        nametable.releaseTemp(pop[2].addr);
+        return true;
+
     }
 
     bool function10()
@@ -1042,17 +1061,11 @@ public:
 
     bool function12()
     {
-        if (pop.size() > 2)
-        {
-            left.addr = pop[1].addr;
-            return true;
-        }
-        return false;
+        left.addr = pop[1].addr;
+        return true;
     }
     bool function13()
     {
-        if (pop.size() < 3)
-            return false;
         string a = pop[0].value;
         if (pop[0].flag == Base::id)
             a = nametable[pop[0].addr];
@@ -1074,18 +1087,21 @@ public:
         send("-",a,"0",nextquad+2);
         send("JMP","","",0);
         left.addr = nextquad;
+        return true;
     }
 
     bool function15()
     {
         Base bool_expression = pop[2];
         four[bool_expression.addr-1].addr = nextquad;
+        return true;
     }
 
     bool function16()
     {
         send("JMP","","",0);
         left.addr = nextquad;
+        return true;
     }
 
     bool function17()
@@ -1095,8 +1111,102 @@ public:
         Base sentence = pop[6];
         four[bool_expression.addr-1].addr = ifsentence.addr;
         four[ifsentence.addr-1].addr = sentence.addr;
+        return true;
     }
 
+
+
+    bool function18()
+    {
+        left.value = elements[pop[1].type].name;
+        int addr = nametable.getAddr(pop[0].value);
+        if (addr == -1)
+        {
+            cout << "未定义的变量！" << endl;
+            return false;
+        }
+        if (elements[pop[1].type].name == "++")
+            send("+",nametable[addr],"1",addr);
+        if (elements[pop[1].type].name == "--")
+            send("-",nametable[addr],"1",addr);
+        return true;
+    }
+
+
+    bool function19()
+    {
+        Base bool_expression = pop[2];
+        Base whilesentence = pop[4];
+        four[bool_expression.addr-1].addr = whilesentence.addr;
+        four[whilesentence.addr-1].addr = bool_expression.addr-2;
+        return true;
+    }
+    bool function20()
+    {
+        //        Base forsentence = pop[8];
+        Base for_set_value = pop[2];
+        Four temp = four[for_set_value.addr+2];
+        deleteFour(for_set_value.addr+2);
+        four.push_back(temp);
+        send("JMP","","",for_set_value.addr);
+        four[for_set_value.addr + 1].addr = nextquad;
+        return true;
+    }
+    bool function21()
+    {
+        left.value = pop[0].value + "," +pop[2].value;
+        return true;
+    }
+    bool function22()
+    {
+        Base nums;
+        int count = 1;
+
+        if (pop.size() == 10)
+        {
+            nums = pop[7];
+            for (int i = 0;i < nums.value.size();i++)
+            {
+                if (nums.value[i] == ',')
+                    count++;
+            }
+            if (count != convert<int>(pop[3].value))
+            {
+                cout << "数组" << pop[1].value << "定义非法！" << endl;
+                return false;
+            }
+        }
+        if (pop.size() == 9)
+        {
+            for (int i = 0;i < nums.value.size();i++)
+            {
+                if (nums.value[i] == ',')
+                    count++;
+            }
+            nums = pop[6];
+        }
+        if (pop.size() == 7)
+            count =  convert<int>(pop[3].value);
+
+        int i = nametable.newAddr(pop[0].value,pop[1].value);
+        if (i == -1)
+        {
+            cout << "变量" << pop[1].value << "重复定义！" << endl;
+            return false;
+        }
+        if (pop.size() == 10 || pop.size() == 9)
+            nametable.setValue(i,nums.value);
+        nametable.setSize(i,count);
+        return true;
+    }
+    bool function23()
+    {
+
+    }
+    bool function24()
+    {
+
+    }
     void printQuad()
     {
 
@@ -1109,6 +1219,18 @@ public:
                 cout << nametable[four[i].addr];
             cout << ")" << endl;
         }
+    }
+
+    void deleteFour(int pos)
+    {
+        for (int i = pos + 1;i < four.size();i++)
+        {
+            if (four[i].op == "JMP" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
+            {
+                four[i].addr--;
+            }
+        }
+        four.erase(four.begin()+pos,four.begin()+pos+1);
     }
 
     bool parser()

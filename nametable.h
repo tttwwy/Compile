@@ -13,16 +13,19 @@ public:
     string name;
     string type;
     string value;
+    int size;
     Symbol(string type,string name)
     {
         this->name = name;
         this->type = type;
+        this->size = 0;
     }
     Symbol(string type,string name,string value)
     {
         this->name = name;
         this->type = type;
         this->value = value;
+        this->size = 0;
     }
     Symbol()
     {
@@ -37,7 +40,6 @@ public:
     NameTable()
     {
         clear();
-
     }
 
     void clear()
@@ -47,7 +49,6 @@ public:
         {
             tempused[i] = false;
             symboltable.push_back(Symbol());
-            int k = symboltable.size();
         }
 
     }
@@ -57,6 +58,16 @@ public:
         if (pos >= tempsize && pos < symboltable.size())
         {
             symboltable[pos].value = value;
+            return true;
+        }
+        return false;
+    }
+
+    bool setSize(int pos,int size)
+    {
+        if (pos >= tempsize && pos < symboltable.size())
+        {
+            symboltable[pos].size = size;
             return true;
         }
         return false;

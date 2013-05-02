@@ -10,24 +10,27 @@ public:
         error = -1,
         id  = 0,
         num  = 1
+
     };
     int type;
     string value;
     int addr;
     Flag flag;
-    int quad;
+
 
     Base(int type,string value)
     {
         this->type = type;
         this->value = value;
         flag = error;
-        quad = 0;
+        addr = -1;
+
     }
     Base(int type)
     {
         this->type = type;
         flag = id;
+        addr = -1;
     }
 
     Base()
