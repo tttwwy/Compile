@@ -1029,7 +1029,8 @@ public:
             a = pop[2].value;
         else if (pop[2].flag == Base::id)
             a = nametable[pop[2].addr];
-        send("MOV",a,"",pop[0].addr);
+        if (pop[0].flag == Base::id)
+            send("MOV",a,"",pop[0].addr);
         nametable.releaseTemp(pop[2].addr);
         return true;
 
