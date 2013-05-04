@@ -80,6 +80,7 @@ public:
 
     Base left;
     vector<Base> pop;
+    vector<NameTable> nametables;
 
     Generator()
     {
@@ -845,6 +846,22 @@ public:
             case 23:
                 success = function23();
                 break;
+            case 24:
+                success = function24();
+                break;
+            case 25:
+                success = function25();
+                break;
+            case 26:
+                success = function26();
+                break;
+            case 27:
+                success = function27();
+                break;
+            case 28:
+                success = function28();
+                break;
+
 
 
             }
@@ -903,9 +920,22 @@ public:
     //F num
     bool function2()
     {
-
-        left.value = pop[0].value;
-        left.flag = Base::num;
+        if (elements[pop[0].type].name == "num")
+        {
+            left.value = pop[0].value;
+            left.flag = Base::num;
+        }
+        else
+        {
+            if (pop[0].value.size() > 1)
+            {
+                cout << "类型转换非法！" << endl;
+                return false;
+            }
+            int temp = pop[0].value[0];
+            left.value = convert<string>(temp);
+            left.flag = Base::num;
+        }
         return true;
 
     }
@@ -1045,10 +1075,7 @@ public:
         else
             left.value = pop[0].value;
         left.flag = pop[0].flag;
-
-
         return true;
-
     }
 
     bool function8()
@@ -1154,11 +1181,11 @@ public:
             a = nametable[pop[0].addr];
         if (pop[0].flag == Base::num)
             a = pop[0].value;
-         if (pop[0].flag == Base::temp)
-         {
-             a = nametable[pop[0].addr];
-             nametable.releaseTemp(pop[0].addr);
-         }
+        if (pop[0].flag == Base::temp)
+        {
+            a = nametable[pop[0].addr];
+            nametable.releaseTemp(pop[0].addr);
+        }
         string b;
         if (pop[2].flag == Base::num)
         {
@@ -1305,29 +1332,122 @@ public:
             return false;
         }
         if (pop.size() == 10 || pop.size() == 9)
+        {
+            if (nums.value.size() > 0)
+            {
+                string temp;
+                int j = 0;
+                int type = getTypeSize(pop[0].value);
+                for (int i = 0;i < nums.value.size();i++)
+                {
+                    if (nums.value[i] != ',')
+                        temp += nums.value[i];
+                    else
+                    {
+                        send("mov",temp,"",pop[1].value + "+" + convert<string>(type * j));
+                        j++;
+                        temp.clear();
+                    }
+                }
+                send("mov",temp,"",pop[1].value + "+" + convert<string>(type * j));
+            }
             nametable.setValue(i,nums.value);
+        }
         nametable.setSize(i,count);
         return true;
     }
+    int getTypeSize(string type)
+    {
+        if (type == "int")
+            return 4;
+        if (type == "char")
+            return 1;
+        if (type == "double")
+            return 4;
+        if (type == "string")
+            return 1;
+
+    }
+
     bool function23()
+    {
+        int i = nametable.newAddr("char",pop[1].value);
+        if (i == -1)
+        {
+            cout << "变量" << pop[1].value << "重复定义！" << endl;
+            return false;
+        }
+        for (int j = 0;j < pop[6].value.size();j++)
+        {
+            string temp (1,pop[6].value[j]);
+            send("mov","'"+temp+"'","",pop[1].value+"+"+convert<string>(j));
+        }
+        send("mov","0","",pop[1].value + "+"+convert<string>(pop[6].value.size()));
+//        nametable.setValue(i,pop[6].value);
+        nametable.setSize(i,pop[6].value.size());
+        return true;
+    }
+    bool function24()
+    {
+        if (pop.size() == 2)
+            nametable.addlist(pop[0].value,pop[1].value);
+        if (pop.size() == 4)
+            nametable.addlist(pop[3].value,pop[4].value);
+        return true;
+    }
+
+    bool function25()
+    {
+        string name = pop[1].value;
+        for (int i = 0;i < nametables.size();i++)
+        {
+            if (nametables[i].getFunctionName() == name)
+            {
+                cout << "函数" << name << "重复定义！" << endl;
+                return false;
+            }
+        }
+        nametable.setFunctionName(name);
+        nametable.setReturnType(pop[0].value);
+        nametable.setFour(four);
+        nametables.push_back(nametable);
+        four.clear();
+        nametable.clear();
+        nextquad = 0;
+        return true;
+
+    }
+    bool function26()
+    {
+        send("pop","","","");
+        if (pop[1].flag == Base::num)
+            send("mov",pop[1].value,"",0);
+        if (pop[1].flag == Base::temp || pop[1].flag == Base::id)
+            send("mov",nametable[pop[1].addr],"",0);
+        send("ret","","","");
+        left.addr = nextquad;
+        return true;
+    }
+    bool function27()
     {
 
     }
-    bool function24()
+    bool function28()
     {
 
     }
     void printQuad()
     {
 
-        for (int i = 0;i < four.size();i++)
+        for (int j = 0;j < nametables.size();j++)
         {
-            cout << i << ":" << "(" << four[i].op << "," << four[i].a << "," << four[i].b << "," ;
-            //            if (four[i].op == "JMP" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
-            //                cout  << four[i].addr ;
-            //            else
-            cout << four[i].addr;
-            cout << ")" << endl;
+
+            for (int i = 0;i < nametables[j].four.size();i++)
+            {
+                cout << i << ":" << "(" << nametables[j].four[i].op << "," << nametables[j].four[i].a << "," << nametables[j].four[i].b << "," ;
+                cout << nametables[j].four[i].addr;
+                cout << ")" << endl;
+            }
         }
     }
 

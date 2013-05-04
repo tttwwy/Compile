@@ -1,6 +1,7 @@
 #ifndef NAMETABLE_H
 #define NAMETABLE_H
 #include "define.h"
+#include "four.h"
 #include <vector>
 #include <sstream>
 #include <iostream>
@@ -37,6 +38,10 @@ class NameTable
 public:
     bool tempused[tempsize];
     vector<Symbol> symboltable;
+    string functionname;
+    string returntype;
+    vector<Symbol> functionlist;
+    vector<Four> four;
     NameTable()
     {
         clear();
@@ -44,14 +49,29 @@ public:
 
     void clear()
     {
+        four.clear();
+        functionlist.clear();
+        returntype.clear();
+        functionname.clear();
         symboltable.clear();
         for (int i = 0;i < 16;i++)
         {
             tempused[i] = false;
             symboltable.push_back(Symbol());
         }
+        tempused[0] = true;
 
     }
+    string getFunctionName()
+    {
+        return functionname;
+    }
+
+    void setFour(vector<Four> four)
+    {
+        this->four = four;
+    }
+
     int getTypeSize(int pos)
     {
         if (pos >= tempsize && pos < symboltable.size())
@@ -61,7 +81,12 @@ public:
             return 4;
         if (type == "char")
             return 1;
+        if (type == "double")
+            return 4;
+        if (type == "string")
+            return 1;
         }
+
         return -1;
     }
 
@@ -83,6 +108,20 @@ public:
             return true;
         }
         return false;
+    }
+    int addlist(string type,string name)
+    {
+        functionlist.push_back(Symbol(type,name));
+    }
+
+    void setFunctionName(string name)
+    {
+        functionname = name;
+    }
+
+    void setReturnType(string type)
+    {
+        this->returntype = type;
     }
 
     int newAddr(string type,string name)
