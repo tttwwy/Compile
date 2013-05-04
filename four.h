@@ -8,8 +8,8 @@ public:
     string op;
     string a;
     string b;
-    int addr;
-    Four(string op,string a,string b,int addr)
+    string addr;
+    Four(string op,string a,string b,string addr)
     {
         this->op = op;
         this->a = a;

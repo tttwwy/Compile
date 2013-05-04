@@ -52,6 +52,18 @@ public:
         }
 
     }
+    int getTypeSize(int pos)
+    {
+        if (pos >= tempsize && pos < symboltable.size())
+        {
+        string type = symboltable[pos].type;
+        if (type == "int")
+            return 4;
+        if (type == "char")
+            return 1;
+        }
+        return -1;
+    }
 
     bool setValue(int pos,string value)
     {
@@ -97,11 +109,13 @@ public:
 
     int newTemp()
     {
+
         for (int i = 0;i < tempsize;i++)
         {
             if (tempused[i] == false)
             {
                 tempused[i] = true;
+                cout << " 申请临时变量" << i << endl;
                 return i;
             }
         }
@@ -111,6 +125,7 @@ public:
     {
         if (i >= 0 && i < tempsize)
             tempused[i] = false;
+          cout << " 释放临时变量" << i << endl;
     }
 
     int getAddr(string name)

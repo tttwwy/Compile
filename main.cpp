@@ -40,7 +40,7 @@ int main()
     }
 
     Scanner scanner;
-    string fileName("1.txt");
+    string fileName("1.cpp");
 //    cin >> fileName;
     if(scanner.getCode(fileName))
     {

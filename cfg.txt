@@ -28,7 +28,7 @@ block sentence block
 8 F ( E ) 
 2 F num 
 3 F id 
-4 F array [ E ] 
+3 F array [ E ] 
 5 F function_call
 11 sentence return E ; 
 11 sentence define 
@@ -42,9 +42,8 @@ block sentence block
 21 nums num , nums 
 7 nums num 
 11 sentence set_value ; 
-9 set_value left = E 
-3 left id 
-left array [ E ] 
+9 set_value id = E 
+9 set_value array [ E ] = E 
 11 sentence loop_expression 
 11 sentence while_expression
 20 loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 

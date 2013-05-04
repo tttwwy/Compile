@@ -9,8 +9,9 @@ public:
     enum Flag {
         error = -1,
         id  = 0,
-        num  = 1
-
+        num  = 1,
+        temp = 2,
+        array = 3
     };
     int type;
     string value;
