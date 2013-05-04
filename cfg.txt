@@ -47,7 +47,8 @@ block sentence block
 11 sentence loop_expression 
 11 sentence while_expression
 20 loop_expression for ( for_set_value ; bool_expression ; IncorDec ) forsentence 
-19 while_expression while ( bool_expression ) whilesentence
+19 while_expression while1 ( bool_expression ) whilesentence
+11 while1 while
 16 whilesentence sentence
 13 bool_expression G op H 
 14 bool_expression F

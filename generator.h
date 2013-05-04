@@ -928,7 +928,7 @@ public:
         }
         else if (pop.size() == 4)
         {
-            left.flag = Base::id;
+            left.flag = Base::temp;
             int j = nametable.newTemp();
             if (pop[2].flag == Base::num)
             {
@@ -1005,17 +1005,26 @@ public:
             left.value = cal(a.value,op,c.value);
             left.flag = Base::num;
         }
+        else if (a.flag == Base::id && c.flag == Base::id)
+        {
+            int addr = nametable.newTemp();
+            left.addr = addr;
+            left.flag = Base::temp;
+
+            send("MOV",nametable[a.addr],"",addr);
+            send(op,nametable[addr],nametable[c.addr],addr);
+        }
         else
         {
             int addr = nametable.newTemp();
             left.addr = addr;
-            left.flag = Base::id;
-            if (a.flag == Base::id)
+            left.flag = Base::temp;
+            if (a.flag == Base::id||a.flag == Base::temp)
             {
                 a.value = nametable[a.addr];
                 nametable.releaseTemp(a.addr);
             }
-            if (c.flag == Base::id)
+            if (c.flag == Base::id||c.flag == Base::temp)
             {
                 c.value = nametable[c.addr];
                 nametable.releaseTemp(c.addr);
@@ -1067,7 +1076,7 @@ public:
 
             if (pop[2].flag == Base::num)
                 a = pop[2].value;
-            else if (pop[2].flag == Base::id)
+            else if (pop[2].flag == Base::id || pop[2].flag == Base::temp)
             {
                 a = nametable[pop[2].addr];
                 nametable.releaseTemp(pop[2].addr);
@@ -1081,7 +1090,7 @@ public:
             int j = nametable.newTemp();
             if (pop[5].flag == Base::num)
                 a = pop[5].value;
-            else if (pop[5].flag == Base::id)
+            else if (pop[5].flag == Base::id|| pop[5].flag == Base::temp)
             {
                 a = nametable[pop[5].addr];
                 nametable.releaseTemp(pop[5].addr);
@@ -1094,7 +1103,7 @@ public:
                 send("MOV",a,"",pop[0].value + "+" + "[" + nametable[j] + "]");
 
             }
-            else if (pop[2].flag == Base::id)
+            else if (pop[2].flag == Base::id|| pop[2].flag == Base::temp)
             {
                 send("*",nametable[pop[2].addr],convert<string>(nametable.getTypeSize(i)),j);
                 send("MOV",a,"",pop[0].value + "+" + "[" + nametable[j] + "]");
@@ -1120,7 +1129,7 @@ public:
         string a;
         if (pop[3].flag == Base::num)
             a = pop[3].value;
-        else if (pop[3].flag == Base::id)
+        else if (pop[3].flag == Base::id || pop[3].flag == Base::temp)
             a = nametable[pop[3].addr];
         send("MOV",a,"",i);
         nametable.releaseTemp(pop[3].addr);
@@ -1140,18 +1149,33 @@ public:
     }
     bool function13()
     {
-        string a = pop[0].value;
+        string a;
         if (pop[0].flag == Base::id)
             a = nametable[pop[0].addr];
-        string b = pop[2].value;
+        if (pop[0].flag == Base::num)
+            a = pop[0].value;
+         if (pop[0].flag == Base::temp)
+         {
+             a = nametable[pop[0].addr];
+             nametable.releaseTemp(pop[0].addr);
+         }
+        string b;
+        if (pop[2].flag == Base::num)
+        {
+            b =  pop[2].value;
+        }
         if (pop[2].flag == Base::id)
+        {
+            b = nametable[pop[2].addr];
+        }
+        if (pop[2].flag == Base::temp)
         {
             b = nametable[pop[2].addr];
             nametable.releaseTemp(pop[2].addr);
         }
+
         send(pop[1].value,a,b,convert<string>(nextquad+2));
         send("JMP","","","0");
-
         left.addr = nextquad;
         return true;
     }
@@ -1161,6 +1185,11 @@ public:
         if (pop[0].flag == Base::num)
             a = pop[0].value;
         if (pop[0].flag == Base::id)
+        {
+            a = nametable[pop[0].addr];
+        }
+
+        if (pop[0].flag == Base::temp)
         {
             a = nametable[pop[0].addr];
             nametable.releaseTemp(pop[0].addr);
@@ -1218,8 +1247,9 @@ public:
     {
         Base bool_expression = pop[2];
         Base whilesentence = pop[4];
+        Base while1 = pop[0];
         four[bool_expression.addr-1].addr = convert<string>(whilesentence.addr);
-        four[whilesentence.addr-1].addr = convert<string>(bool_expression.addr-2);
+        four[whilesentence.addr-1].addr = convert<string>(while1.addr);
         return true;
     }
     bool function20()

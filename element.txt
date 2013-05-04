@@ -1,6 +1,7 @@
-37
+38
 S
 whilesentence
+while1
 while_expression
 function
 function_define
@@ -36,7 +37,7 @@ scanf_expression
 getaddr
 G
 define
-41
+40
 main
 else
 if
@@ -77,4 +78,3 @@ string
 printf
 scanf
 array
-M
