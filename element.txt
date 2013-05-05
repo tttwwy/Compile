@@ -38,7 +38,7 @@ scanf_expression
 getaddr
 G
 define
-40
+41
 main
 else
 if
@@ -62,6 +62,7 @@ for
 -
 *
 /
+%
 ;
 ,
 (

@@ -19,5 +19,6 @@ HEADERS += \
     item.h \
     itemset.h \
     nametable.h \
-    four.h
+    four.h \
+    masm.h
 

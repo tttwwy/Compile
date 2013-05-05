@@ -10,7 +10,7 @@ function function_define function
 28 function_call id ( function_call_list ) 
 27 function_call_list list
 27 function_call_list list , function_call_list
-4 list & id
+//4 list & id
 //4 list array + num
 4 list E
 S function
@@ -27,6 +27,7 @@ block sentence block
 7 E T 
 6 T T * F 
 6 T T / F 
+6 T T % F 
 7 T F 
 8 F ( E ) 
 2 F num 
@@ -40,7 +41,7 @@ block sentence block
 1 define type id_name  ;
 //id_name id , id_name 
 7 id_name id 
-23 define char array [ ] = { string } ; 
+23 define type array [ ] = { string } ; 
 22 define type array [ num ] = { nums } ; 
 22 define type array [ ] = { nums } ; 
 22 define type array [ num ] ; 
@@ -78,9 +79,9 @@ block sentence block
 11 sentence inout_expression i
 inout_expression printf_expression 
 inout_expression scanf_expression 
-printf_expression printf ( string ) ; 
-printf_expression printf ( string , expressions ) ; 
-expressions id , expressions 
-expressions id 
-scanf_expression scanf ( string , getaddr ) ; 
-getaddr & id 
+31 printf_expression printf ( string ) ; 
+31 printf_expression printf ( string , expressions ) ; 
+30 expressions id , expressions 
+29 expressions id 
+32 scanf_expression scanf ( string , id ) ; 
+

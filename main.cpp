@@ -6,6 +6,7 @@
 #include "generator.h"
 #include "rule.h"
 #include <fstream>
+#include "masm.h"
 using namespace std;
 
 
@@ -58,6 +59,9 @@ int main()
         return 1;
     }
     generator.parser();
+    Masm32 masm;
+    masm.getNameTable(generator.getNameTables());
+    masm.translate();
     return 0;
 }
 

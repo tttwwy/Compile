@@ -7,7 +7,7 @@
 #include <iostream>
 
 using namespace std;
-#define tempsize 16
+#define tempsize 5
 class Symbol
 {
 public:
@@ -42,6 +42,7 @@ public:
     string returntype;
     vector<Symbol> functionlist;
     vector<Four> four;
+    int count;
     NameTable()
     {
         clear();
@@ -49,22 +50,34 @@ public:
 
     void clear()
     {
+        count = 0;
         four.clear();
         functionlist.clear();
         returntype.clear();
         functionname.clear();
         symboltable.clear();
-        for (int i = 0;i < 16;i++)
+        for (int i = 0;i < tempsize;i++)
         {
             tempused[i] = false;
             symboltable.push_back(Symbol());
         }
         tempused[0] = true;
-
     }
     string getFunctionName()
     {
         return functionname;
+    }
+    void print()
+    {
+        for (int i = tempsize+functionlist.size();i < symboltable.size();i++)
+        {
+            cout <<  symboltable[i].type << " ";
+            cout << symboltable[i].name;
+            if (symboltable[i].size > 0)
+                cout << "[" << symboltable[i].size << "]";
+
+            cout << endl;
+        }
     }
 
     void setFour(vector<Four> four)
@@ -169,12 +182,11 @@ public:
     int newTemp()
     {
 
-        for (int i = 0;i < tempsize;i++)
+        for (int i = 1;i < tempsize;i++)
         {
             if (tempused[i] == false)
             {
                 tempused[i] = true;
-                cout << " 申请临时变量" << i << endl;
                 return i;
             }
         }
@@ -184,7 +196,7 @@ public:
     {
         if (i >= 0 && i < tempsize)
             tempused[i] = false;
-          cout << " 释放临时变量" << i << endl;
+
     }
 
     int getAddr(string name)
@@ -196,24 +208,18 @@ public:
         }
         return -1;
     }
-        template<class out_type,class in_value>
-    out_type convert(const in_value & t)
-
-    {
-        stringstream stream;
-        stream<<t;//向流中传值
-        out_type result;//这里存储转换结果
-        stream>>result;//向result中写入值
-        return result;
-    }
 
     const string  operator [] (int pos) {
         if (pos >= 0 && pos < tempsize)
         {
-            string temp;
-            temp += "t";
-            temp += convert<string>(pos);
-            return temp;
+            switch (pos)
+            {
+            case 0:return "eax";
+            case 1:return "ebx";
+            case 2:return "ecx";
+            case 3:return "edx";
+            case 4:return "eex";
+            }
         }
         else if (pos < symboltable.size())
             return symboltable[pos].name;

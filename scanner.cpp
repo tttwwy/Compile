@@ -155,6 +155,8 @@ Types Scanner::getType(string str)
         return WHILE;
     if (str == "for")
         return FOR;
+    if (str == "%")
+        return MOD;
     if (str == "+")
         return PLUS;
     if (str == "-")
@@ -359,7 +361,14 @@ bool Scanner::scan()
                         cout <<line<<":"<<"È±ÉÙË«ÒýºÅ£¡"<< endl;
                         return false;
                     }
-                    str+=ch;
+                    char temp = getNext();
+                    if (ch == '\\' && temp == 'n')
+                        str += 10;
+                    else
+                    {
+                        getBack();
+                        str+=ch;
+                    }
                 }
                 else
                 {
@@ -452,7 +461,7 @@ bool Scanner::scan()
 
 void Scanner::print()
 {
-    string name[41] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","LE","GE","EQ","NEQ","LCOMMENT","RCOMMENT","LT","GT","ASSIGN","PLUS","MINUS","MULTI","RDIV","SEMI","COMMA","LPAREN","RPAREN","LMBRACKET","RMBRACKET","LBBRACKET","RBBRACKET","NUM","ID","STR","ERROR","ADDR","PLUSPLUS","MINUSMINUS","PRINTF","SCANF","MAIN","ARRAY"};
+    string name[] = {"ELSE","IF","INT","DOUBLE","CHAR","RETURN","VOID","WHILE","FOR","LE","GE","EQ","NEQ","LCOMMENT","RCOMMENT","LT","GT","ASSIGN","PLUS","MINUS","MULTI","RDIV","SEMI","COMMA","LPAREN","RPAREN","LMBRACKET","RMBRACKET","LBBRACKET","RBBRACKET","NUM","ID","STR","ERROR","ADDR","PLUSPLUS","MINUSMINUS","PRINTF","SCANF","MAIN","ARRAY","MOD"};
 
     for (int i = 0;i < tokens.size();i++)
     {
