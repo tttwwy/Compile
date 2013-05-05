@@ -46761,12 +46761,17 @@ Goto Table:
 (COMMA,)
 (INT,)
 (ID, b)
+(COMMA,)
+(INT,)
+(ID, d)
 (RPAREN,)
 (LBBRACKET,)
 (RETURN,)
 (ID, a)
 (MULTI,)
 (ID, b)
+(MULTI,)
+(ID, d)
 (SEMI,)
 (RBBRACKET,)
 (INT,)
@@ -46792,15 +46797,11 @@ Goto Table:
 (ASSIGN,)
 (ID, cal)
 (LPAREN,)
-(ARRAY,)
-(LMBRACKET,)
-(NUM, 0)
-(RMBRACKET,)
-(COMMA,)
-(ARRAY,)
-(LMBRACKET,)
 (NUM, 1)
-(RMBRACKET,)
+(COMMA,)
+(NUM, 2)
+(COMMA,)
+(NUM, 3)
 (RPAREN,)
 (SEMI,)
 (PRINTF,)
@@ -46834,6 +46835,13 @@ token:int
 token:id
 规约:index:7 type->int
 token:id
+token:,
+规约:index:24 function_define_list->function_define_list,typeid
+token:,
+token:int
+token:id
+规约:index:7 type->int
+token:id
 token:)
 规约:index:24 function_define_list->function_define_list,typeid
 token:)
@@ -46844,6 +46852,12 @@ token:*
 规约:index:3 F->id
 token:*
 规约:index:7 T->F
+token:*
+token:id
+token:*
+规约:index:3 F->id
+token:*
+规约:index:6 T->T*F
 token:*
 token:id
 token:;
@@ -46903,18 +46917,9 @@ token:=
 token:=
 token:id
 token:(
-token:array
-token:[
 token:num
-token:]
-规约:index:2 F->num
-token:]
-规约:index:7 T->F
-token:]
-规约:index:7 E->T
-token:]
 token:,
-规约:index:3 F->array[E]
+规约:index:2 F->num
 token:,
 规约:index:7 T->F
 token:,
@@ -46922,18 +46927,19 @@ token:,
 token:,
 规约:index:4 list->E
 token:,
-token:array
-token:[
 token:num
-token:]
+token:,
 规约:index:2 F->num
-token:]
+token:,
 规约:index:7 T->F
-token:]
+token:,
 规约:index:7 E->T
-token:]
+token:,
+规约:index:4 list->E
+token:,
+token:num
 token:)
-规约:index:3 F->array[E]
+规约:index:2 F->num
 token:)
 规约:index:7 T->F
 token:)
@@ -46942,6 +46948,8 @@ token:)
 规约:index:4 list->E
 token:)
 规约:index:27 function_call_list->list
+token:)
+规约:index:27 function_call_list->list,function_call_list
 token:)
 规约:index:27 function_call_list->list,function_call_list
 token:)
@@ -47000,25 +47008,25 @@ token:}
 语法分析完成！
 0:(mov,a,,ebx)
 1:(*,ebx,b,ebx)
-2:(mov,ebx,,eax)
-3:(ret,,,)
+2:(*,ebx,d,ecx)
+3:(mov,ecx,,eax)
+4:(ret,,,)
 int a[1]
 int b
 string string0[4]
 0:(mov,1,,a+0)
 1:(mov,2,,a+4)
 2:(mov,3,,a+8)
-3:(*,0,4,ebx)
-4:(mov,a+[ebx],,ebx)
-5:(*,1,4,ecx)
-6:(mov,a+[ecx],,ecx)
-7:(call,ebx,ecx,,cal)
-8:(mov,eax,,ebx)
-9:(mov,ebx,,b)
-10:(mov,'%',,string0+0)
-11:(mov,'d',,string0+1)
-12:(mov,10,,string0+2)
-13:(mov,0,,string0+3)
-14:(call,addr string0,b,,crt_printf)
-15:(mov,0,,eax)
-16:(ret,,,)
+3:(push,,,3)
+4:(push,,,2)
+5:(push,,,1)
+6:(call,,,cal)
+7:(mov,eax,,ebx)
+8:(mov,ebx,,b)
+9:(mov,'%',,string0+0)
+10:(mov,'d',,string0+1)
+11:(mov,10,,string0+2)
+12:(mov,0,,string0+3)
+13:(call,addr string0,b,,crt_printf)
+14:(mov,0,,eax)
+15:(ret,,,)

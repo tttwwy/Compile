@@ -10,6 +10,7 @@ function function_define function
 28 function_call id ( function_call_list ) 
 27 function_call_list list
 27 function_call_list list , function_call_list
+//27 function_call_list function_call_list , list
 //4 list & id
 //4 list array + num
 4 list E

@@ -1482,37 +1482,84 @@ public:
         left.addr = nextquad;
         return true;
     }
+    //    bool function27()
+    //    {
+
+    //        left.value = pop[0].value;
+    //        if (pop.size() == 3)
+    //        {
+    //            left.value += "," + pop[2].value;
+    //        }
+    //        return true;
+    //    }
+
     bool function27()
     {
-
-        left.value = pop[0].value;
+        Base list;
         if (pop.size() == 3)
         {
-            left.value += "," + pop[2].value;
+            list = pop[0];
+            left.addr = pop[2].addr + 1;
         }
+        if (pop.size() == 1)
+        {
+            list = pop[0];
+            left.addr = 1;
+        }
+        //        if (list.flag == Base::num)
+        //            send("push","","",list.value);
+        //        if (list.flag == Base::id)
+        //        {
+        send("push","","",list.value);
+        //        }
+
+        //        if (list.flag == Base::temp)
+        //        {
+        //            send("push","","",list.value);
+        //        }
+
+        //        left.value = pop[0].value;
+        //        if (pop.size() == 3)
+        //        {
+        //            left.value += "," + pop[2].value;
+        //        }
         return true;
     }
     bool function28()
     {
-        if (pop.size() == 3)
-        {
-            send("call","","",pop[0].value);
-        }
         if (pop.size() == 4)
         {
-            if (pop[2].value.find("eax") != string::npos)
-                nametable.releaseTemp(0);
-            if (pop[2].value.find("ebx") !=  string::npos)
-                nametable.releaseTemp(1);
-            if (pop[2].value.find("ecx") !=  string::npos)
-                nametable.releaseTemp(2);
-            if (pop[2].value.find("edx") !=  string::npos)
-                nametable.releaseTemp(3);
-            if (pop[2].value.find("eex") !=  string::npos)
-                nametable.releaseTemp(4);
-
-            send("call",pop[2].value,"",pop[0].value);
+//            int begin = nextquad - pop[2].addr;
+//            int end = nextquad - 1;
+//            if (begin > end)
+//                return false;
+//            while(begin < end)
+//            {
+//                Four temp = four[begin];
+//                four[begin++] = four[end];
+//                four[end--] = temp;
+//            }
         }
+        send("call","","",pop[0].value);
+//        if (pop.size() == 3)
+//        {
+//            send("call","","",pop[0].value);
+//        }
+//        if (pop.size() == 4)
+//        {
+//            if (pop[2].value.find("eax") != string::npos)
+//                nametable.releaseTemp(0);
+//            if (pop[2].value.find("ebx") !=  string::npos)
+//                nametable.releaseTemp(1);
+//            if (pop[2].value.find("ecx") !=  string::npos)
+//                nametable.releaseTemp(2);
+//            if (pop[2].value.find("edx") !=  string::npos)
+//                nametable.releaseTemp(3);
+//            if (pop[2].value.find("eex") !=  string::npos)
+//                nametable.releaseTemp(4);
+
+//            send("call",pop[2].value,"",pop[0].value);
+//        }
         return true;
     }
 
@@ -1595,7 +1642,7 @@ public:
             send("mov",temp,"",name+"+"+convert<string>(j));
         }
         send("mov","0","",name + "+"+convert<string>(pop[2].value.size()));
-         send("call","addr "+name+",addr "+pop[4].value,"","crt_scanf");
+        send("call","addr "+name+",addr "+pop[4].value,"","crt_scanf");
     }
 
     void printQuad()

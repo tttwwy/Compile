@@ -166,10 +166,15 @@ public:
             }
             else if (one.op == "call")
             {
-                cout << "invoke " << one.addr;
-                if (one.a.size() > 0)
-                    cout <<"," << one.a ;
-                cout << endl;
+                if (one.addr != "crt_printf" && one.addr != "crt_scanf")
+                    cout << "call " << one.addr << endl;
+                else
+                {
+                    cout << "invoke " << one.addr;
+                    if (one.a.size() > 0)
+                        cout <<"," << one.a ;
+                    cout << endl;
+                }
             }
             else if (one.op == "ret")
             {
@@ -181,16 +186,15 @@ public:
                 }
                 if (nametable.functionname != "main")
                 {
-                  cout << "pop edx" << endl;
-                  cout << "pop ecx" << endl;
-                  cout << "pop ebx" << endl;
+                    cout << "pop edx" << endl;
+                    cout << "pop ecx" << endl;
+                    cout << "pop ebx" << endl;
                 }
                 cout << "ret" << endl;
             }
-            else if (one.op == "pop")
+            else if (one.op == "push")
             {
-
-//                    cout << "popad" << endl;
+                cout << "push " << one.addr << endl;
             }
         }
 

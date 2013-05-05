@@ -16,7 +16,7 @@ include macro.asm
 .data
 buffer	db MAX_PATH dup(?)
 .code
-cal proc a,b
+cal proc a,b,d
 push ebx
 push ecx
 push edx
@@ -26,6 +26,10 @@ mov edx,b
 imul edx
 mov ebx,eax
 mov eax,ebx
+mov edx,d
+imul edx
+mov ecx,eax
+mov eax,ecx
 pop edx
 pop ecx
 pop ebx
@@ -40,17 +44,10 @@ local string0[4]:BYTE
 mov a+0,1
 mov a+4,2
 mov a+8,3
-mov eax,0
-mov edx,4
-imul edx
-mov ebx,eax
-mov ebx,a+[ebx]
-mov eax,1
-mov edx,4
-imul edx
-mov ecx,eax
-mov ecx,a+[ecx]
-invoke cal,ebx,ecx
+push 3
+push 2
+push 1
+call cal
 mov ebx,eax
 mov b,ebx
 mov string0+0,'%'
