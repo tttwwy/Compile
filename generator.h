@@ -1527,8 +1527,8 @@ public:
     }
     bool function28()
     {
-        if (pop.size() == 4)
-        {
+//        if (pop.size() == 4)
+//        {
 //            int begin = nextquad - pop[2].addr;
 //            int end = nextquad - 1;
 //            if (begin > end)
@@ -1539,7 +1539,7 @@ public:
 //                four[begin++] = four[end];
 //                four[end--] = temp;
 //            }
-        }
+//        }
         send("call","","",pop[0].value);
 //        if (pop.size() == 3)
 //        {
