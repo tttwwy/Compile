@@ -1,15 +1,18 @@
 function function_define
-function function function_define
-function_define function_type id ( ) { block }
-function_define function_type id ( function_define_list ) { block }
-function_type type
-function_type void
-function_define_list type id
-function_define_list function_define_list , type id
-function_call id ( ) 
-function_call id ( function_call_list ) 
-function_call_list F
-function_call_list function_call_list , F
+function function_define function 
+25 function_define function_type id ( ) { block }
+25 function_define function_type id ( function_define_list ) { block }
+7 function_type type
+7 function_type void
+24 function_define_list type id
+24 function_define_list function_define_list , type id
+28 function_call id ( ) 
+28 function_call id ( function_call_list ) 
+27 function_call_list list
+27 function_call_list list , function_call_list
+4 list & id
+//4 list array + num
+4 list E
 S function
 7 type int 
 7 type double 
@@ -27,15 +30,17 @@ block sentence block
 7 T F 
 8 F ( E ) 
 2 F num 
+2 F string
 3 F id 
 3 F array [ E ] 
 5 F function_call
-11 sentence return E ; 
+26 sentence return E ; 
 11 sentence define 
 10 define type id_name = E ;
 1 define type id_name  ;
 //id_name id , id_name 
 7 id_name id 
+23 define char array [ ] = { string } ; 
 22 define type array [ num ] = { nums } ; 
 22 define type array [ ] = { nums } ; 
 22 define type array [ num ] ; 

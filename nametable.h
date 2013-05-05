@@ -109,6 +109,26 @@ public:
         }
         return false;
     }
+
+    int getSize(int pos)
+    {
+        if (pos >= tempsize && pos < symboltable.size())
+        {
+            return symboltable[pos].size;
+
+        }
+        return -1;
+    }
+    int getSize(string name)
+    {
+        int pos = getAddr(name);
+        if ( pos == -1)
+        {
+           return -1;
+        }
+        return symboltable[pos].size;
+    }
+
     int addlist(string type,string name)
     {
         functionlist.push_back(Symbol(type,name));

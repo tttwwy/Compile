@@ -943,8 +943,6 @@ public:
     //F id
     bool function3()
     {
-
-
         int i = nametable.getAddr(pop[0].value);
         if (i == -1)
         {
@@ -975,34 +973,63 @@ public:
             }
 
         }
+        else if (pop.size() == 3)
+        {
+            left.flag = Base::array;
+            left.addr = i;
+        }
         return true;
     }
 
     bool function4()
-    {/*
-        int i = nametable.getAddr(pop[0].value);
-        if (i == -1)
+    {
+        if (pop.size() == 1)
         {
-            cout << "变量" << pop[0].value << "未定义！" << endl;
-            return false;
+            if (pop[0].flag == Base::id && nametable.getSize(pop[0].addr) > 0)
+            {
+                left.value = "addr" + string(" ") + nametable[pop[0].addr];
+            }
+            if (pop[0].flag == Base::temp)
+                left.value = nametable[pop[0].addr];
+            if (pop[0].flag == Base::num)
+                left.value = pop[0].value;
         }
-        string a;
-        if (pop[2].flag == Base::num)
-            a = pop[2].value;
-        if (pop[2].flag == Base::id)
-            a = nametable[pop[2].addr];
-        int j = nametable.newTemp();
-        send("MOV",nametable[i]+"+"+a,"",j);
-        nametable.releaseTemp(pop[2].addr);
-        left.addr = j;
-        left.flag = Base::id;
-
-        return true;*/
+        if (pop.size() == 2)
+        {
+            int i = nametable.getAddr(pop[1].value);
+            if (i == -1)
+            {
+                cout << "未定义的变量！" << endl;
+                return false;
+            }
+            left.value = "addr" + string(" ") + pop[1].value;
+        }
+        if (pop.size() == 3)
+        {
+            int i = nametable.getAddr(pop[1].value);
+            if (i == -1)
+            {
+                cout << "未定义的变量！" << endl;
+                return false;
+            }
+            if (nametable.getSize(i) <= 0)
+            {
+                cout << "非法操作！" << endl;
+                return false;
+            }
+            int k = convert<int>(pop[2].value) * nametable.getTypeSize(i);
+            left.value = "addr" + string(" ") + pop[0].value + "+" + convert<string>(k);
+        }
+        return true;
     }
 
     bool function5()
     {
-
+        int i = nametable.newTemp();
+        send("mov",nametable[0],"",i);
+        left.addr = i;
+        left.flag = Base::temp;
+        return true;
     }
 
     string cal(string a,string op,string c)
@@ -1383,7 +1410,7 @@ public:
             send("mov","'"+temp+"'","",pop[1].value+"+"+convert<string>(j));
         }
         send("mov","0","",pop[1].value + "+"+convert<string>(pop[6].value.size()));
-//        nametable.setValue(i,pop[6].value);
+        //        nametable.setValue(i,pop[6].value);
         nametable.setSize(i,pop[6].value.size());
         return true;
     }
@@ -1431,10 +1458,24 @@ public:
     bool function27()
     {
 
+        left.value = pop[0].value;
+        if (pop.size() == 3)
+        {
+            left.value += "," + pop[2].value;
+        }
+        return true;
     }
     bool function28()
     {
-
+        if (pop.size() == 3)
+        {
+            send("call","","",pop[0].value);
+        }
+        if (pop.size() == 4)
+        {
+            send("call",pop[2].value,"",pop[0].value);
+        }
+        return true;
     }
     void printQuad()
     {

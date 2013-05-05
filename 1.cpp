@@ -1,3 +1,16 @@
+int k()
+{
+	int a;
+	int b[2];
+	a = 2;
+	a = b[1];
+	return 0;
+}
+
+int m(int i)
+{
+	return 0;
+}
 int main(){
     int score[6] = {76, 82, 90, 86, 79, 62};
     int credit[6] = {2, 2, 1, 2, 2, 3};
@@ -6,12 +19,16 @@ int main(){
     double sum;
     int temp;
     int i;
+	char a[] = {"asdfasdf"};
 
     printf("please input your student number:");
     scanf("%d",&stu_number);
 
-    sum = 0;
-    temp = 0;
+    sum = k();
+    temp = m(a);
+    temp = m(score+1);
+    temp = m(&i);
+    temp = m(score);
     for( i = 0; i < 6; i++)
     {
          sum = sum + score[i] * credit[i];
