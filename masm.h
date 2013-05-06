@@ -97,7 +97,7 @@ public:
         vector<Four> four = nametable.four;
         for (int i = 0;i< four.size();i++)
         {
-            if (four[i].op == "jmp" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
+            if (four[i].op == "jmp" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "=="||four[i].op == "!=")
             {
                 int t = convert<int>(four[i].addr);
                 if (t >= four.size())
@@ -153,9 +153,10 @@ public:
                 }
             }
 
-            else if (one.op == ">="|| one.op == "<=" ||one.op == "<" || one.op == ">" ||one.op == "==")
+            else if (one.op == ">="|| one.op == "<=" ||one.op == "<" || one.op == ">" ||one.op == "==" || one.op == "!=")
             {
-                cout << "cmp "<< one.a <<"," <<one.b << endl;
+                cout << "mov eax," << one.a << endl;
+                cout << "cmp eax," <<one.b << endl;
                 if (one.op == ">=")
                     cout << "jge " << one.addr << endl;
                 else if (one.op == "<=")
@@ -166,6 +167,8 @@ public:
                     cout << "jg " << one.addr << endl;
                 else if (one.op == "==")
                     cout << "je " << one.addr << endl;
+                else if (one.op == "!=")
+                   cout << "jne " << one.addr << endl;
             }
             else if (one.op == "call")
             {

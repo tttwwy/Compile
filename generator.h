@@ -1262,7 +1262,7 @@ public:
             a = nametable[pop[0].addr];
             nametable.releaseTemp(pop[0].addr);
         }
-        send("-",a,"0",convert<string>(nextquad+2));
+        send("!=",a,"0",convert<string>(nextquad+2));
         send("jmp","","","0");
         left.addr = nextquad;
         return true;
@@ -1669,7 +1669,7 @@ public:
     {
         for (int i = pos + 1;i < four.size();i++)
         {
-            if (four[i].op == "jmp" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
+            if (four[i].op == "jmp" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "=="||four[i].op == "!=")
             {
                 four[i].addr = convert<string>(convert<int>(four[i].addr)-1);
             }

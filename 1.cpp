@@ -1,8 +1,8 @@
+
 int main(){
-int a = 0;
-int b = 0;
-scanf("%d",&a);
-printf("%d\n",a);
-  	
+   while(1)
+   {
+   	   printf("asdfasdf\n");
+   }
     return 0;
 }

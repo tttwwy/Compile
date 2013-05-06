@@ -64,6 +64,7 @@ block sentence block
 7 op < 
 7 op > 
 7 op ==
+7 op !=
 7 H E 
 7 G E 
 11 forsentence sentence 

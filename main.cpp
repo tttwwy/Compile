@@ -12,13 +12,14 @@ using namespace std;
 
 int main()
 {
-//    streambuf* coutBuf = cout.rdbuf();
+    streambuf* coutBuf = cout.rdbuf();
     ofstream of("out.txt");
     // 获取文件out.txt流缓冲区指针
     streambuf* fileBuf = of.rdbuf();
 
     // 设置cout流缓冲区指针为out.txt的流缓冲区指针
     cout.rdbuf(fileBuf);
+//    cout.rdbuf(coutBuf);
 
     Grammar  grammar;
     grammar.getFileElement("element.txt");
@@ -42,7 +43,8 @@ int main()
 
     Scanner scanner;
     string fileName("1.cpp");
-//    cin >> fileName;
+    while(1)
+    {
     if(scanner.getCode(fileName))
     {
         if(!scanner.scan())
@@ -62,6 +64,13 @@ int main()
     Masm32 masm;
     masm.getNameTable(generator.getNameTables());
     masm.translate();
+
+    cout.rdbuf(coutBuf);
+    cout << "文件翻译完成！按任意键，继续翻译。。" << endl;
+    string aa;
+    cin >> aa;
+    cout.rdbuf(fileBuf);
+    }
     return 0;
 }
 
