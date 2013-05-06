@@ -958,7 +958,7 @@ public:
         int i = nametable.getAddr(pop[0].value);
         if (i == -1)
         {
-            cout << "未定义的变量！" << endl;
+            cout << "变量" << pop[0].value << "未定义！" << endl;
             return false;
         }
         if (pop.size() == 1)
@@ -1527,72 +1527,69 @@ public:
     }
     bool function28()
     {
-//        if (pop.size() == 4)
-//        {
-//            int begin = nextquad - pop[2].addr;
-//            int end = nextquad - 1;
-//            if (begin > end)
-//                return false;
-//            while(begin < end)
-//            {
-//                Four temp = four[begin];
-//                four[begin++] = four[end];
-//                four[end--] = temp;
-//            }
-//        }
+        //        if (pop.size() == 4)
+        //        {
+        //            int begin = nextquad - pop[2].addr;
+        //            int end = nextquad - 1;
+        //            if (begin > end)
+        //                return false;
+        //            while(begin < end)
+        //            {
+        //                Four temp = four[begin];
+        //                four[begin++] = four[end];
+        //                four[end--] = temp;
+        //            }
+        //        }
         send("call","","",pop[0].value);
-//        if (pop.size() == 3)
-//        {
-//            send("call","","",pop[0].value);
-//        }
-//        if (pop.size() == 4)
-//        {
-//            if (pop[2].value.find("eax") != string::npos)
-//                nametable.releaseTemp(0);
-//            if (pop[2].value.find("ebx") !=  string::npos)
-//                nametable.releaseTemp(1);
-//            if (pop[2].value.find("ecx") !=  string::npos)
-//                nametable.releaseTemp(2);
-//            if (pop[2].value.find("edx") !=  string::npos)
-//                nametable.releaseTemp(3);
-//            if (pop[2].value.find("eex") !=  string::npos)
-//                nametable.releaseTemp(4);
+        //        if (pop.size() == 3)
+        //        {
+        //            send("call","","",pop[0].value);
+        //        }
+        //        if (pop.size() == 4)
+        //        {
+        //            if (pop[2].value.find("eax") != string::npos)
+        //                nametable.releaseTemp(0);
+        //            if (pop[2].value.find("ebx") !=  string::npos)
+        //                nametable.releaseTemp(1);
+        //            if (pop[2].value.find("ecx") !=  string::npos)
+        //                nametable.releaseTemp(2);
+        //            if (pop[2].value.find("edx") !=  string::npos)
+        //                nametable.releaseTemp(3);
+        //            if (pop[2].value.find("eex") !=  string::npos)
+        //                nametable.releaseTemp(4);
 
-//            send("call",pop[2].value,"",pop[0].value);
-//        }
+        //            send("call",pop[2].value,"",pop[0].value);
+        //        }
         return true;
     }
 
     bool function29()
     {
-        int i = nametable.getAddr(pop[0].value);
+        string id;
+        if (pop.size() == 1)
+            id = pop[0].value;
+        if (pop.size() == 2)
+            id = pop[1].value;
+        int i = nametable.getAddr(id);
         if (i == -1)
         {
-            cout << "变量" << pop[0].value << "未定义" << endl;
+            cout << "变量" << id << "未定义" << endl;
             return false;
         }
-        if (nametable.getSize(i) > 0)
-            left.value = "addr " + pop[0].value;
+        if (nametable.getSize(i) > 0 || pop.size() == 2)
+        {
+            send("lea",id,"","eax");
+            send("push","","","eax");
+        }
         else
-            left.value = pop[0].value;
-
+            send("push","","",id);
         return true;
 
     }
 
     bool function30()
     {
-        int i = nametable.getAddr(pop[0].value);
-        if (i == -1)
-        {
-            cout << "变量" << pop[0].value << "未定义" << endl;
-            return false;
-        }
-        if (nametable.getSize(i) > 0)
-            left.value = "addr " + pop[0].value + "," +pop[2].value;
-        else
-            left.value =  pop[0].value + "," +pop[2].value;
-        return true;
+
     }
 
     bool function31()
@@ -1616,10 +1613,13 @@ public:
             send("mov",temp,"",name+"+"+convert<string>(j));
         }
         send("mov","0","",name + "+"+convert<string>(pop[2].value.size()));
-        if (pop.size() == 5)
-            send("call","addr "+name,"","crt_printf");
-        if (pop.size() == 7)
-            send("call","addr "+name+","+pop[4].value,"","crt_printf");
+
+        send("lea",name,"","eax");
+        send("push","","","eax");
+        send("call","","","crt_printf");
+        return true;
+
+
     }
 
     bool function32()
@@ -1642,7 +1642,11 @@ public:
             send("mov",temp,"",name+"+"+convert<string>(j));
         }
         send("mov","0","",name + "+"+convert<string>(pop[2].value.size()));
-        send("call","addr "+name+",addr "+pop[4].value,"","crt_scanf");
+
+        send("lea",name,"","eax");
+        send("push","","","eax");
+        send("call","","","crt_scanf");
+        return true;
     }
 
     void printQuad()

@@ -100,6 +100,8 @@ public:
             if (four[i].op == "jmp" || four[i].op == ">="|| four[i].op == "<=" ||four[i].op == "<" || four[i].op == ">" ||four[i].op == "==")
             {
                 int t = convert<int>(four[i].addr);
+                if (t >= four.size())
+                    four.push_back(Four("ret","","",""));
                 if (jmp[t].size() == 0)
                 {
                     jmp[t] = "jmp" + convert<string>(count);
@@ -115,12 +117,13 @@ public:
             if (jmp[i].size() > 0)
                 cout << jmp[i] << ":";
 
-            if (one.op == "mov")
+            if (one.op == "mov" || one.op == "lea")
             {
-                cout << "mov " <<  one.addr << "," <<  one.a << endl;
+                cout << one.op<<" " <<  one.addr << "," <<  one.a << endl;
             }
             else if (one.op == "jmp")
             {
+
                 cout << "jmp " << one.addr << endl;
             }
 
@@ -166,23 +169,23 @@ public:
             }
             else if (one.op == "call")
             {
-                if (one.addr != "crt_printf" && one.addr != "crt_scanf")
+//                if (one.addr != "crt_printf" && one.addr != "crt_scanf")
                     cout << "call " << one.addr << endl;
-                else
-                {
-                    cout << "invoke " << one.addr;
-                    if (one.a.size() > 0)
-                        cout <<"," << one.a ;
-                    cout << endl;
-                }
+//                else
+//                {
+//                    cout << "invoke " << one.addr;
+//                    if (one.a.size() > 0)
+//                        cout <<"," << one.a ;
+//                    cout << endl;
+//                }
             }
+
             else if (one.op == "ret")
             {
                 if (nametable.functionname == "main")
                 {
                     cout << "invoke StdIn,addr buffer,sizeof buffer" << endl;
                     cout << "invoke ExitProcess,0" << endl;
-
                 }
                 if (nametable.functionname != "main")
                 {
@@ -197,6 +200,7 @@ public:
                 cout << "push " << one.addr << endl;
             }
         }
+
 
 
         cout << nametable.functionname <<" endp" << endl;
