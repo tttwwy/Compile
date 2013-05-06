@@ -48460,6 +48460,8 @@ Goto Table:
 (LBBRACKET,)
 (WHILE,)
 (LPAREN,)
+(NUM, 2)
+(LT,)
 (NUM, 1)
 (RPAREN,)
 (LBBRACKET,)
@@ -48489,10 +48491,28 @@ token:(
 规约:index:11 while1->while
 token:(
 token:num
+token:<
+规约:index:2 F->num
+token:<
+规约:index:7 T->F
+token:<
+规约:index:7 E->T
+token:<
+规约:index:7 G->E
+token:<
+token:num
+规约:index:7 op-><
+token:num
 token:)
 规约:index:2 F->num
 token:)
-规约:index:14 bool_expression->F
+规约:index:7 T->F
+token:)
+规约:index:7 E->T
+token:)
+规约:index:7 H->E
+token:)
+规约:index:13 bool_expression->GopH
 token:)
 token:{
 token:printf
@@ -48538,7 +48558,7 @@ token:}
 规约:S->function
 语法分析完成！
 string string0[10]
-0:(!=,1,0,2)
+0:(<,2,1,2)
 1:(jmp,,,16)
 2:(mov,'a',,string0+0)
 3:(mov,'s',,string0+1)
@@ -48556,3 +48576,1213 @@ string string0[10]
 15:(jmp,,,0)
 16:(mov,0,,eax)
 17:(ret,,,)
+(INT,)
+(ID, main)
+(LPAREN,)
+(RPAREN,)
+(LBBRACKET,)
+(WHILE,)
+(LPAREN,)
+(NUM, 2)
+(LT,)
+(NUM, 1)
+(RPAREN,)
+(LBBRACKET,)
+(PRINTF,)
+(LPAREN,)
+(STR, asdfasdf
+)
+(RPAREN,)
+(SEMI,)
+(RBBRACKET,)
+(RETURN,)
+(NUM, 0)
+(SEMI,)
+(RBBRACKET,)
+find sentence!
+token:int
+token:id
+规约:index:7 type->int
+token:id
+规约:index:7 function_type->type
+token:id
+token:(
+token:)
+token:{
+token:while
+token:(
+规约:index:11 while1->while
+token:(
+token:num
+token:<
+规约:index:2 F->num
+token:<
+规约:index:7 T->F
+token:<
+规约:index:7 E->T
+token:<
+规约:index:7 G->E
+token:<
+token:num
+规约:index:7 op-><
+token:num
+token:)
+规约:index:2 F->num
+token:)
+规约:index:7 T->F
+token:)
+规约:index:7 E->T
+token:)
+规约:index:7 H->E
+token:)
+规约:index:13 bool_expression->GopH
+token:)
+token:{
+token:printf
+token:(
+token:string
+token:)
+token:;
+token:}
+规约:index:31 printf_expression->printf(string);
+token:}
+规约:inout_expression->printf_expression
+token:}
+规约:index:11 sentence->inout_expression
+token:}
+规约:index:7 block->sentence
+token:}
+token:return
+规约:index:12 sentence->{block}
+token:return
+规约:index:16 whilesentence->sentence
+token:return
+规约:index:19 while_expression->while1(bool_expression)whilesentence
+token:return
+规约:index:11 sentence->while_expression
+token:return
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+token:}
+规约:index:26 sentence->returnE;
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+规约:index:25 function_define->function_typeid(){block}
+规约:function->function_define
+规约:S->function
+语法分析完成！
+string string0[10]
+0:(<,2,1,2)
+1:(jmp,,,16)
+2:(mov,'a',,string0+0)
+3:(mov,'s',,string0+1)
+4:(mov,'d',,string0+2)
+5:(mov,'f',,string0+3)
+6:(mov,'a',,string0+4)
+7:(mov,'s',,string0+5)
+8:(mov,'d',,string0+6)
+9:(mov,'f',,string0+7)
+10:(mov,10,,string0+8)
+11:(mov,0,,string0+9)
+12:(lea,string0,,eax)
+13:(push,,,eax)
+14:(call,,,crt_printf)
+15:(jmp,,,0)
+16:(mov,0,,eax)
+17:(ret,,,)
+(INT,)
+(ID, main)
+(LPAREN,)
+(RPAREN,)
+(LBBRACKET,)
+(WHILE,)
+(LPAREN,)
+(NUM, 2)
+(GT,)
+(NUM, 1)
+(RPAREN,)
+(LBBRACKET,)
+(PRINTF,)
+(LPAREN,)
+(STR, asdfasdf
+)
+(RPAREN,)
+(SEMI,)
+(RBBRACKET,)
+(RETURN,)
+(NUM, 0)
+(SEMI,)
+(RBBRACKET,)
+find sentence!
+token:int
+token:id
+规约:index:7 type->int
+token:id
+规约:index:7 function_type->type
+token:id
+token:(
+token:)
+token:{
+token:while
+token:(
+规约:index:11 while1->while
+token:(
+token:num
+token:>
+规约:index:2 F->num
+token:>
+规约:index:7 T->F
+token:>
+规约:index:7 E->T
+token:>
+规约:index:7 G->E
+token:>
+token:num
+规约:index:7 op->>
+token:num
+token:)
+规约:index:2 F->num
+token:)
+规约:index:7 T->F
+token:)
+规约:index:7 E->T
+token:)
+规约:index:7 H->E
+token:)
+规约:index:13 bool_expression->GopH
+token:)
+token:{
+token:printf
+token:(
+token:string
+token:)
+token:;
+token:}
+规约:index:31 printf_expression->printf(string);
+token:}
+规约:inout_expression->printf_expression
+token:}
+规约:index:11 sentence->inout_expression
+token:}
+规约:index:7 block->sentence
+token:}
+token:return
+规约:index:12 sentence->{block}
+token:return
+规约:index:16 whilesentence->sentence
+token:return
+规约:index:19 while_expression->while1(bool_expression)whilesentence
+token:return
+规约:index:11 sentence->while_expression
+token:return
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+token:}
+规约:index:26 sentence->returnE;
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+规约:index:25 function_define->function_typeid(){block}
+规约:function->function_define
+规约:S->function
+语法分析完成！
+string string0[10]
+0:(>,2,1,2)
+1:(jmp,,,16)
+2:(mov,'a',,string0+0)
+3:(mov,'s',,string0+1)
+4:(mov,'d',,string0+2)
+5:(mov,'f',,string0+3)
+6:(mov,'a',,string0+4)
+7:(mov,'s',,string0+5)
+8:(mov,'d',,string0+6)
+9:(mov,'f',,string0+7)
+10:(mov,10,,string0+8)
+11:(mov,0,,string0+9)
+12:(lea,string0,,eax)
+13:(push,,,eax)
+14:(call,,,crt_printf)
+15:(jmp,,,0)
+16:(mov,0,,eax)
+17:(ret,,,)
+(INT,)
+(ID, main)
+(LPAREN,)
+(RPAREN,)
+(LBBRACKET,)
+(INT,)
+(ARRAY,)
+(LMBRACKET,)
+(NUM, 6)
+(RMBRACKET,)
+(ASSIGN,)
+(LBBRACKET,)
+(NUM, 76)
+(COMMA,)
+(NUM, 82)
+(COMMA,)
+(NUM, 90)
+(COMMA,)
+(NUM, 86)
+(COMMA,)
+(NUM, 79)
+(COMMA,)
+(NUM, 62)
+(RBBRACKET,)
+(SEMI,)
+(INT,)
+(ARRAY,)
+(LMBRACKET,)
+(NUM, 6)
+(RMBRACKET,)
+(ASSIGN,)
+(LBBRACKET,)
+(NUM, 2)
+(COMMA,)
+(NUM, 2)
+(COMMA,)
+(NUM, 1)
+(COMMA,)
+(NUM, 2)
+(COMMA,)
+(NUM, 2)
+(COMMA,)
+(NUM, 3)
+(RBBRACKET,)
+(SEMI,)
+(INT,)
+(ID, stu_number)
+(SEMI,)
+(INT,)
+(ID, mean)
+(SEMI,)
+(INT,)
+(ID, sum)
+(SEMI,)
+(INT,)
+(ID, temp)
+(SEMI,)
+(INT,)
+(ID, i)
+(SEMI,)
+(CHAR,)
+(ARRAY,)
+(LMBRACKET,)
+(RMBRACKET,)
+(ASSIGN,)
+(LBBRACKET,)
+(STR, asdfasdf)
+(RBBRACKET,)
+(SEMI,)
+(PRINTF,)
+(LPAREN,)
+(STR, please input your student number:)
+(RPAREN,)
+(SEMI,)
+(SCANF,)
+(LPAREN,)
+(STR, %d)
+(COMMA,)
+(ADDR,)
+(ID, stu_number)
+(RPAREN,)
+(SEMI,)
+(ID, sum)
+(ASSIGN,)
+(NUM, 0)
+(SEMI,)
+(ID, temp)
+(ASSIGN,)
+(NUM, 0)
+(SEMI,)
+(FOR,)
+(LPAREN,)
+(ID, i)
+(ASSIGN,)
+(NUM, 0)
+(SEMI,)
+(ID, i)
+(LT,)
+(NUM, 6)
+(SEMI,)
+(ID, i)
+(PLUSPLUS,)
+(RPAREN,)
+(LBBRACKET,)
+(ID, sum)
+(ASSIGN,)
+(ID, sum)
+(PLUS,)
+(ARRAY,)
+(LMBRACKET,)
+(ID, i)
+(RMBRACKET,)
+(MULTI,)
+(ARRAY,)
+(LMBRACKET,)
+(ID, i)
+(RMBRACKET,)
+(SEMI,)
+(ID, temp)
+(ASSIGN,)
+(ID, temp)
+(PLUS,)
+(ARRAY,)
+(LMBRACKET,)
+(ID, i)
+(RMBRACKET,)
+(SEMI,)
+(RBBRACKET,)
+(ID, mean)
+(ASSIGN,)
+(ID, sum)
+(RDIV,)
+(ID, temp)
+(SEMI,)
+(IF,)
+(LPAREN,)
+(ID, mean)
+(GE,)
+(NUM, 60)
+(RPAREN,)
+(LBBRACKET,)
+(ID, mean)
+(ASSIGN,)
+(ID, mean)
+(MINUS,)
+(NUM, 60)
+(SEMI,)
+(PRINTF,)
+(LPAREN,)
+(STR, the score of student number %d is %d higher than 60.
+)
+(COMMA,)
+(ID, stu_number)
+(COMMA,)
+(ID, mean)
+(RPAREN,)
+(SEMI,)
+(RBBRACKET,)
+(ELSE,)
+(LBBRACKET,)
+(ID, mean)
+(ASSIGN,)
+(NUM, 60)
+(MINUS,)
+(ID, mean)
+(SEMI,)
+(PRINTF,)
+(LPAREN,)
+(STR, the score of student number %d is %d lower than 60.
+)
+(COMMA,)
+(ID, stu_number)
+(COMMA,)
+(ID, mean)
+(RPAREN,)
+(SEMI,)
+(RBBRACKET,)
+(RETURN,)
+(NUM, 0)
+(SEMI,)
+(RBBRACKET,)
+find sentence!
+token:int
+token:id
+规约:index:7 type->int
+token:id
+规约:index:7 function_type->type
+token:id
+token:(
+token:)
+token:{
+token:int
+token:array
+规约:index:7 type->int
+token:array
+token:[
+token:num
+token:]
+token:=
+token:{
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:}
+规约:index:7 nums->num
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+token:;
+token:int
+规约:index:22 define->typearray[num]={nums};
+token:int
+规约:index:11 sentence->define
+token:int
+token:array
+规约:index:7 type->int
+token:array
+token:[
+token:num
+token:]
+token:=
+token:{
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:,
+token:num
+token:}
+规约:index:7 nums->num
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+规约:index:21 nums->num,nums
+token:}
+token:;
+token:int
+规约:index:22 define->typearray[num]={nums};
+token:int
+规约:index:11 sentence->define
+token:int
+token:id
+规约:index:7 type->int
+token:id
+token:;
+规约:index:7 id_name->id
+token:;
+token:int
+规约:index:1 define->typeid_name;
+token:int
+规约:index:11 sentence->define
+token:int
+token:id
+规约:index:7 type->int
+token:id
+token:;
+规约:index:7 id_name->id
+token:;
+token:int
+规约:index:1 define->typeid_name;
+token:int
+规约:index:11 sentence->define
+token:int
+token:id
+规约:index:7 type->int
+token:id
+token:;
+规约:index:7 id_name->id
+token:;
+token:int
+规约:index:1 define->typeid_name;
+token:int
+规约:index:11 sentence->define
+token:int
+token:id
+规约:index:7 type->int
+token:id
+token:;
+规约:index:7 id_name->id
+token:;
+token:int
+规约:index:1 define->typeid_name;
+token:int
+规约:index:11 sentence->define
+token:int
+token:id
+规约:index:7 type->int
+token:id
+token:;
+规约:index:7 id_name->id
+token:;
+token:char
+规约:index:1 define->typeid_name;
+token:char
+规约:index:11 sentence->define
+token:char
+token:array
+规约:index:7 type->char
+token:array
+token:[
+token:]
+token:=
+token:{
+token:string
+token:}
+token:;
+token:printf
+规约:index:23 define->typearray[]={string};
+token:printf
+规约:index:11 sentence->define
+token:printf
+token:(
+token:string
+token:)
+token:;
+token:scanf
+规约:index:31 printf_expression->printf(string);
+token:scanf
+规约:inout_expression->printf_expression
+token:scanf
+规约:index:11 sentence->inout_expression
+token:scanf
+token:(
+token:string
+token:,
+token:&
+token:id
+token:)
+规约:index:29 getaddr->&id
+token:)
+规约:expressions->getaddr
+token:)
+token:;
+token:id
+规约:index:32 scanf_expression->scanf(string,expressions);
+token:id
+规约:inout_expression->scanf_expression
+token:id
+规约:index:11 sentence->inout_expression
+token:id
+token:=
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:id
+规约:index:11 sentence->set_value;
+token:id
+token:=
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:for
+规约:index:11 sentence->set_value;
+token:for
+token:(
+token:id
+token:=
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+规约:index:9 set_value->id=E
+token:;
+规约:index:11 for_set_value->set_value
+token:;
+token:id
+token:<
+规约:index:3 F->id
+token:<
+规约:index:7 T->F
+token:<
+规约:index:7 E->T
+token:<
+规约:index:7 G->E
+token:<
+token:num
+规约:index:7 op-><
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+规约:index:7 H->E
+token:;
+规约:index:13 bool_expression->GopH
+token:;
+token:id
+token:++
+token:)
+规约:index:18 Inc_expression->id++
+token:)
+规约:index:11 IncorDec->Inc_expression
+token:)
+token:{
+token:id
+token:=
+token:id
+token:+
+规约:index:3 F->id
+token:+
+规约:index:7 T->F
+token:+
+规约:index:7 E->T
+token:+
+token:array
+token:[
+token:id
+token:]
+规约:index:3 F->id
+token:]
+规约:index:7 T->F
+token:]
+规约:index:7 E->T
+token:]
+token:*
+规约:index:3 F->array[E]
+token:*
+规约:index:7 T->F
+token:*
+token:array
+token:[
+token:id
+token:]
+规约:index:3 F->id
+token:]
+规约:index:7 T->F
+token:]
+规约:index:7 E->T
+token:]
+token:;
+规约:index:3 F->array[E]
+token:;
+规约:index:6 T->T*F
+token:;
+规约:index:6 E->E+T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:id
+规约:index:11 sentence->set_value;
+token:id
+token:=
+token:id
+token:+
+规约:index:3 F->id
+token:+
+规约:index:7 T->F
+token:+
+规约:index:7 E->T
+token:+
+token:array
+token:[
+token:id
+token:]
+规约:index:3 F->id
+token:]
+规约:index:7 T->F
+token:]
+规约:index:7 E->T
+token:]
+token:;
+规约:index:3 F->array[E]
+token:;
+规约:index:7 T->F
+token:;
+规约:index:6 E->E+T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:}
+规约:index:11 sentence->set_value;
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+token:id
+规约:index:12 sentence->{block}
+token:id
+规约:index:11 forsentence->sentence
+token:id
+规约:index:20 loop_expression->for(for_set_value;bool_expression;IncorDec)forsentence
+token:id
+规约:index:11 sentence->loop_expression
+token:id
+token:=
+token:id
+token:/
+规约:index:3 F->id
+token:/
+规约:index:7 T->F
+token:/
+token:id
+token:;
+规约:index:3 F->id
+token:;
+规约:index:6 T->T/F
+token:;
+规约:index:7 E->T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:if
+规约:index:11 sentence->set_value;
+token:if
+token:(
+token:id
+token:>=
+规约:index:3 F->id
+token:>=
+规约:index:7 T->F
+token:>=
+规约:index:7 E->T
+token:>=
+规约:index:7 G->E
+token:>=
+token:num
+规约:index:7 op->>=
+token:num
+token:)
+规约:index:2 F->num
+token:)
+规约:index:7 T->F
+token:)
+规约:index:7 E->T
+token:)
+规约:index:7 H->E
+token:)
+规约:index:13 bool_expression->GopH
+token:)
+token:{
+token:id
+token:=
+token:id
+token:-
+规约:index:3 F->id
+token:-
+规约:index:7 T->F
+token:-
+规约:index:7 E->T
+token:-
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:6 E->E-T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:printf
+规约:index:11 sentence->set_value;
+token:printf
+token:(
+token:string
+token:,
+token:id
+token:,
+规约:index:29 getaddr->id
+token:,
+token:id
+token:)
+规约:index:29 getaddr->id
+token:)
+规约:expressions->getaddr
+token:)
+规约:expressions->getaddr,expressions
+token:)
+token:;
+token:}
+规约:index:31 printf_expression->printf(string,expressions);
+token:}
+规约:inout_expression->printf_expression
+token:}
+规约:index:11 sentence->inout_expression
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+token:else
+规约:index:12 sentence->{block}
+token:else
+规约:index:16 ifsentence->sentence
+token:else
+token:{
+token:id
+token:=
+token:num
+token:-
+规约:index:2 F->num
+token:-
+规约:index:7 T->F
+token:-
+规约:index:7 E->T
+token:-
+token:id
+token:;
+规约:index:3 F->id
+token:;
+规约:index:7 T->F
+token:;
+规约:index:6 E->E-T
+token:;
+规约:index:9 set_value->id=E
+token:;
+token:printf
+规约:index:11 sentence->set_value;
+token:printf
+token:(
+token:string
+token:,
+token:id
+token:,
+规约:index:29 getaddr->id
+token:,
+token:id
+token:)
+规约:index:29 getaddr->id
+token:)
+规约:expressions->getaddr
+token:)
+规约:expressions->getaddr,expressions
+token:)
+token:;
+token:}
+规约:index:31 printf_expression->printf(string,expressions);
+token:}
+规约:inout_expression->printf_expression
+token:}
+规约:index:11 sentence->inout_expression
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+token:return
+规约:index:12 sentence->{block}
+token:return
+规约:index:17 if_expression->if(bool_expression)ifsentenceelsesentence
+token:return
+规约:index:11 sentence->if_expression
+token:return
+token:num
+token:;
+规约:index:2 F->num
+token:;
+规约:index:7 T->F
+token:;
+规约:index:7 E->T
+token:;
+token:}
+规约:index:26 sentence->returnE;
+token:}
+规约:index:7 block->sentence
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:block->sentenceblock
+token:}
+规约:index:25 function_define->function_typeid(){block}
+规约:function->function_define
+规约:S->function
+语法分析完成！
+int score[6]
+int credit[6]
+int stu_number
+int mean
+int sum
+int temp
+int i
+char a[9]
+string string0[34]
+string string1[3]
+string string2[54]
+string string3[53]
+0:(mov,76,,score+0)
+1:(mov,82,,score+4)
+2:(mov,90,,score+8)
+3:(mov,86,,score+12)
+4:(mov,79,,score+16)
+5:(mov,62,,score+20)
+6:(mov,2,,credit+0)
+7:(mov,2,,credit+4)
+8:(mov,1,,credit+8)
+9:(mov,2,,credit+12)
+10:(mov,2,,credit+16)
+11:(mov,3,,credit+20)
+12:(mov,'a',,a+0)
+13:(mov,'s',,a+1)
+14:(mov,'d',,a+2)
+15:(mov,'f',,a+3)
+16:(mov,'a',,a+4)
+17:(mov,'s',,a+5)
+18:(mov,'d',,a+6)
+19:(mov,'f',,a+7)
+20:(mov,0,,a+8)
+21:(mov,'p',,string0+0)
+22:(mov,'l',,string0+1)
+23:(mov,'e',,string0+2)
+24:(mov,'a',,string0+3)
+25:(mov,'s',,string0+4)
+26:(mov,'e',,string0+5)
+27:(mov,' ',,string0+6)
+28:(mov,'i',,string0+7)
+29:(mov,'n',,string0+8)
+30:(mov,'p',,string0+9)
+31:(mov,'u',,string0+10)
+32:(mov,'t',,string0+11)
+33:(mov,' ',,string0+12)
+34:(mov,'y',,string0+13)
+35:(mov,'o',,string0+14)
+36:(mov,'u',,string0+15)
+37:(mov,'r',,string0+16)
+38:(mov,' ',,string0+17)
+39:(mov,'s',,string0+18)
+40:(mov,'t',,string0+19)
+41:(mov,'u',,string0+20)
+42:(mov,'d',,string0+21)
+43:(mov,'e',,string0+22)
+44:(mov,'n',,string0+23)
+45:(mov,'t',,string0+24)
+46:(mov,' ',,string0+25)
+47:(mov,'n',,string0+26)
+48:(mov,'u',,string0+27)
+49:(mov,'m',,string0+28)
+50:(mov,'b',,string0+29)
+51:(mov,'e',,string0+30)
+52:(mov,'r',,string0+31)
+53:(mov,':',,string0+32)
+54:(mov,0,,string0+33)
+55:(lea,string0,,eax)
+56:(push,,,eax)
+57:(call,,,crt_printf)
+58:(lea,stu_number,,eax)
+59:(push,,,eax)
+60:(mov,'%',,string1+0)
+61:(mov,'d',,string1+1)
+62:(mov,0,,string1+2)
+63:(lea,string1,,eax)
+64:(push,,,eax)
+65:(call,,,crt_scanf)
+66:(mov,0,,sum)
+67:(mov,0,,temp)
+68:(mov,0,,i)
+69:(<,i,6,71)
+70:(jmp,,,84)
+71:(*,i,4,ebx)
+72:(mov,score+[ebx],,ebx)
+73:(*,i,4,ecx)
+74:(mov,credit+[ecx],,ecx)
+75:(*,ebx,ecx,edx)
+76:(+,sum,edx,ebx)
+77:(mov,ebx,,sum)
+78:(*,i,4,ebx)
+79:(mov,credit+[ebx],,ebx)
+80:(+,temp,ebx,ecx)
+81:(mov,ecx,,temp)
+82:(+,i,1,i)
+83:(jmp,,,69)
+84:(mov,sum,,ebx)
+85:(/,ebx,temp,ebx)
+86:(mov,ebx,,mean)
+87:(>=,mean,60,89)
+88:(jmp,,,151)
+89:(-,mean,60,ebx)
+90:(mov,ebx,,mean)
+91:(push,,,stu_number)
+92:(push,,,mean)
+93:(mov,'t',,string2+0)
+94:(mov,'h',,string2+1)
+95:(mov,'e',,string2+2)
+96:(mov,' ',,string2+3)
+97:(mov,'s',,string2+4)
+98:(mov,'c',,string2+5)
+99:(mov,'o',,string2+6)
+100:(mov,'r',,string2+7)
+101:(mov,'e',,string2+8)
+102:(mov,' ',,string2+9)
+103:(mov,'o',,string2+10)
+104:(mov,'f',,string2+11)
+105:(mov,' ',,string2+12)
+106:(mov,'s',,string2+13)
+107:(mov,'t',,string2+14)
+108:(mov,'u',,string2+15)
+109:(mov,'d',,string2+16)
+110:(mov,'e',,string2+17)
+111:(mov,'n',,string2+18)
+112:(mov,'t',,string2+19)
+113:(mov,' ',,string2+20)
+114:(mov,'n',,string2+21)
+115:(mov,'u',,string2+22)
+116:(mov,'m',,string2+23)
+117:(mov,'b',,string2+24)
+118:(mov,'e',,string2+25)
+119:(mov,'r',,string2+26)
+120:(mov,' ',,string2+27)
+121:(mov,'%',,string2+28)
+122:(mov,'d',,string2+29)
+123:(mov,' ',,string2+30)
+124:(mov,'i',,string2+31)
+125:(mov,'s',,string2+32)
+126:(mov,' ',,string2+33)
+127:(mov,'%',,string2+34)
+128:(mov,'d',,string2+35)
+129:(mov,' ',,string2+36)
+130:(mov,'h',,string2+37)
+131:(mov,'i',,string2+38)
+132:(mov,'g',,string2+39)
+133:(mov,'h',,string2+40)
+134:(mov,'e',,string2+41)
+135:(mov,'r',,string2+42)
+136:(mov,' ',,string2+43)
+137:(mov,'t',,string2+44)
+138:(mov,'h',,string2+45)
+139:(mov,'a',,string2+46)
+140:(mov,'n',,string2+47)
+141:(mov,' ',,string2+48)
+142:(mov,'6',,string2+49)
+143:(mov,'0',,string2+50)
+144:(mov,'.',,string2+51)
+145:(mov,10,,string2+52)
+146:(mov,0,,string2+53)
+147:(lea,string2,,eax)
+148:(push,,,eax)
+149:(call,,,crt_printf)
+150:(jmp,,,211)
+151:(-,60,mean,ebx)
+152:(mov,ebx,,mean)
+153:(push,,,stu_number)
+154:(push,,,mean)
+155:(mov,'t',,string3+0)
+156:(mov,'h',,string3+1)
+157:(mov,'e',,string3+2)
+158:(mov,' ',,string3+3)
+159:(mov,'s',,string3+4)
+160:(mov,'c',,string3+5)
+161:(mov,'o',,string3+6)
+162:(mov,'r',,string3+7)
+163:(mov,'e',,string3+8)
+164:(mov,' ',,string3+9)
+165:(mov,'o',,string3+10)
+166:(mov,'f',,string3+11)
+167:(mov,' ',,string3+12)
+168:(mov,'s',,string3+13)
+169:(mov,'t',,string3+14)
+170:(mov,'u',,string3+15)
+171:(mov,'d',,string3+16)
+172:(mov,'e',,string3+17)
+173:(mov,'n',,string3+18)
+174:(mov,'t',,string3+19)
+175:(mov,' ',,string3+20)
+176:(mov,'n',,string3+21)
+177:(mov,'u',,string3+22)
+178:(mov,'m',,string3+23)
+179:(mov,'b',,string3+24)
+180:(mov,'e',,string3+25)
+181:(mov,'r',,string3+26)
+182:(mov,' ',,string3+27)
+183:(mov,'%',,string3+28)
+184:(mov,'d',,string3+29)
+185:(mov,' ',,string3+30)
+186:(mov,'i',,string3+31)
+187:(mov,'s',,string3+32)
+188:(mov,' ',,string3+33)
+189:(mov,'%',,string3+34)
+190:(mov,'d',,string3+35)
+191:(mov,' ',,string3+36)
+192:(mov,'l',,string3+37)
+193:(mov,'o',,string3+38)
+194:(mov,'w',,string3+39)
+195:(mov,'e',,string3+40)
+196:(mov,'r',,string3+41)
+197:(mov,' ',,string3+42)
+198:(mov,'t',,string3+43)
+199:(mov,'h',,string3+44)
+200:(mov,'a',,string3+45)
+201:(mov,'n',,string3+46)
+202:(mov,' ',,string3+47)
+203:(mov,'6',,string3+48)
+204:(mov,'0',,string3+49)
+205:(mov,'.',,string3+50)
+206:(mov,10,,string3+51)
+207:(mov,0,,string3+52)
+208:(lea,string3,,eax)
+209:(push,,,eax)
+210:(call,,,crt_printf)
+211:(mov,0,,eax)
+212:(ret,,,)

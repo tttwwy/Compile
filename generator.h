@@ -73,14 +73,14 @@ public:
     vector<Token> token;
     vector<Four> four;
     NameTable nametable;
-    vector<vector<Four> > tempfour;
+    vector<NameTable> nametables;
     int nextquad;
 
 
 
     Base left;
     vector<Base> pop;
-    vector<NameTable> nametables;
+
 
     Generator()
     {
@@ -750,6 +750,7 @@ public:
 
     bool getTokens(vector<Token> tokens)
     {
+        token.clear();
         string name[] = {"else","if","int","double","char","return","void","while","for","<=",">=","==","!=","/*","*/","<",">","=","+","-","*","/",";",",","(",")","[","]","{","}","num","id","string","ERROR","&","++","--","printf","scanf","main","array","%"};
 
         for (int i = 0;i < tokens.size();i++)
@@ -1683,11 +1684,13 @@ public:
             stateStack.pop();
         while(!eleStack.empty())
             eleStack.pop();
-
+        id = 0;
+        four.clear();
+        nametable.clear();
+        nametables.clear();
         Token ip = getNext();
         stateStack.push(0);
         eleStack.push(Base(beginTokenId));
-
         int sentence = 0;
         nextquad = 0;
 
