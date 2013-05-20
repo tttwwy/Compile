@@ -1579,17 +1579,32 @@ public:
         }
         if (nametable.getSize(i) > 0 || pop.size() == 2)
         {
-            send("lea",id,"","eax");
-            send("push","","","eax");
+            left.value = id;
+            left.flag = Base::array;
+//            send("lea",id,"","eax");
+//            send("push","","","eax");
         }
         else
-            send("push","","",id);
+        {
+            left.value = id;
+            left.flag = Base::id;
+        }
+//            send("push","","",id);
         return true;
 
     }
 
     bool function30()
     {
+        if (pop[0].flag == Base::array)
+        {
+            send("lea",pop[0].value,"","eax");
+            send("push","","","eax");
+        }
+
+        if (pop[0].flag == Base::id)
+            send("push","","",pop[0].value);
+        return true;
 
     }
 
@@ -1655,7 +1670,10 @@ public:
 
         for (int j = 0;j < nametables.size();j++)
         {
+            cout << "函数:" << nametables[j].functionname << endl;
+            cout << "符号表：" << endl;
             nametables[j].print();
+            cout << endl << "四元组：" << endl;
 
             for (int i = 0;i < nametables[j].four.size();i++)
             {

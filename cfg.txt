@@ -83,8 +83,8 @@ inout_expression printf_expression
 inout_expression scanf_expression 
 31 printf_expression printf ( string ) ; 
 31 printf_expression printf ( string , expressions ) ; 
-expressions getaddr , expressions 
-expressions getaddr 
+30 expressions getaddr , expressions 
+30 expressions getaddr 
 32 scanf_expression scanf ( string , expressions ) ; 
 32 scanf_expression scanf ( string  ) ; 
 29 getaddr id

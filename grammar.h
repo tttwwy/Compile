@@ -64,10 +64,10 @@ public:
         string line,leftstr,temp,rightstr;
         int index = -1;
         file.open(filename.c_str(),ios::in);
-        for (int i = 0;i < elements.size();i++)
-        {
-            cout << i << ":" << elements[i] << endl;
-        }
+//        for (int i = 0;i < elements.size();i++)
+//        {
+//            cout << i << ":" << elements[i] << endl;
+//        }
         while(file)
         {
             index = -1;
@@ -96,7 +96,7 @@ public:
                 }
                 if (i == elements.size()-1)
                 {
-                    cout << "未知元素：" << left << endl;
+//                    cout << "未知元素：" << left << endl;
                 }
             }
             while(stream >> rightstr)
@@ -108,8 +108,8 @@ public:
                         right.push_back(elements[i]);
                         break;
                     }
-                    if (i == elements.size() - 1)
-                        cout << "未知元素：" << rightstr << endl;
+//                    if (i == elements.size() - 1)
+//                        cout << "未知元素：" << rightstr << endl;
                 }
             }
             add(Rule(index,left,right));
@@ -120,8 +120,8 @@ public:
 
     void showRules()
     {
-        for (unsigned int i = 0;i < rules.size();i++)
-            cout << rules[i] << endl;
+//        for (unsigned int i = 0;i < rules.size();i++)
+//            cout << rules[i] << endl;
     }
 };
 

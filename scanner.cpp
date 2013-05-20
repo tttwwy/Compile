@@ -261,10 +261,12 @@ bool Scanner::scan()
                 {
                     state = DONE;
                     getBack();
+                      state = SYM;
                 }
                 else
                 {
                     getBack();
+
                 }
             }
             else
@@ -386,7 +388,7 @@ bool Scanner::scan()
                 if (ch == '\0')
                     return false;
                 state = getstate(ch);
-                if (state != DFAID && state != DFANUM)
+                if (state != DFAID && state != DFANUM || ch == '-')
                 {
                     getBack();
                     state = DONE;
